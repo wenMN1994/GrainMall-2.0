@@ -10,12 +10,19 @@
     <description>聚合服务</description>
     <packaging>pom</packaging>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
         <module>mall-ware</module>
         <module>mall-product</module>
         <module>mall-member</module>
         <module>mall-order</module>
         <module>mall-coupon</module>
+        <module>renren-fast</module>
+        <module>renren-generator</module>
+        <module>mall-common</module>
     </modules>
 
 </project>

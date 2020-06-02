@@ -19,3 +19,6 @@ buildNumber.properties
 .idea
 
 **/.gitignore
+**/**.iml
+
+**/mall-ui.code-workspace
