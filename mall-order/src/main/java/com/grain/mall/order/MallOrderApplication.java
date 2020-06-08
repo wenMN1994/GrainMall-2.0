@@ -2,6 +2,7 @@ package com.grain.mall.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @author：Dragon Wen
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @modified By：
  * @version: $
  */
+@EnableDiscoveryClient
 @SpringBootApplication
 public class MallOrderApplication {
 
