@@ -45,7 +45,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return (menu1.getSort()==null?0:menu1.getSort()) - (menu2.getSort()==null?0:menu2.getSort());
         }).collect(Collectors.toList());
 
-
         return levelOneMenus;
     }
 
@@ -60,7 +59,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     private List<CategoryEntity> getChildrens(CategoryEntity root, List<CategoryEntity> all){
         List<CategoryEntity> children = all.stream().filter(categoryEntity -> {
             return categoryEntity.getParentCid() == root.getCatId();
-        }).map((categoryEntity)->{
+        }).map((categoryEntity) -> {
             // 1、找到子菜单
             categoryEntity.setChildren(getChildrens(categoryEntity,all));
             return categoryEntity;
