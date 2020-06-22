@@ -27,8 +27,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * @modified By：
  * @version: $
  */
-@MapperScan("com.grain.mall.product.dao")
 @EnableDiscoveryClient
+@MapperScan("com.grain.mall.product.dao")
 @SpringBootApplication
 public class MallProductApplication {
 

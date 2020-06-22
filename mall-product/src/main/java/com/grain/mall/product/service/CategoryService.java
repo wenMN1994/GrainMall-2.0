@@ -23,5 +23,11 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> listWithTree();
+
+    /**
+     * 批量删除商品分类
+     * @param asList
+     */
+    void removeMenuByIds(List<Long> asList);
 }
 
