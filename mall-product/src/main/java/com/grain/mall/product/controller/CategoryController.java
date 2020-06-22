@@ -76,6 +76,17 @@ public class CategoryController {
     }
 
     /**
+     * 批量更新菜单树
+     * @param category
+     * @return
+     */
+    @RequestMapping("/update/sort")
+    public R updateSort(@RequestBody CategoryEntity[] category){
+        categoryService.updateBatchById(Arrays.asList(category));
+        return R.ok();
+    }
+
+    /**
      * 删除
      * @RequestBody:获取请求体，必须发送POST请求
      */
