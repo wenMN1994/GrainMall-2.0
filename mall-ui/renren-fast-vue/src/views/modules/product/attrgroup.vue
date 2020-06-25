@@ -68,6 +68,12 @@
 </template>
 
 <script>
+/**
+ * 父子组件传递数据
+ * 1)、子组件给父组件传递数据，事件机制；
+ *    子组件给父组件发送一个事件，携带上数据。
+ * // this.$emit("事件名",携带的数据...)
+ */
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import category from "../common/category";
@@ -104,12 +110,16 @@ export default {
     treenodeclick(data, node, component) {
       console.log("attrgroup感知到category的节点被点击", data, node, component);
       console.log("刚才被点击的菜单id:", data.catId);
+      if(node.level == 3){
+        this.catId = data.catId;
+        this.getDataList();// 重新查询
+      }
     },
     // 获取数据列表
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/product/attrgroup/list"),
+        url: this.$http.adornUrl(`/product/attrgroup/list/${this.catId}`),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
