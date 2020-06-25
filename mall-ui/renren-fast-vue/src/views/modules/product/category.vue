@@ -30,7 +30,7 @@
         </span>
       </span>
     </el-tree>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
+    <el-dialog @closed="dialogClose" :title="title" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
       <el-form :model="category">
         <el-form-item label="分类名称">
           <el-input v-model="category.name" autocomplete="off"></el-input>
@@ -43,7 +43,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogCancel()">取 消</el-button>
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addOrUpdateHandle()">确 定</el-button>
       </div>
     </el-dialog>
@@ -122,8 +122,7 @@ export default {
       });
     },
 
-    dialogCancel() {
-      this.dialogFormVisible = false;
+    dialogClose() {
       this.category.catId = null;
       this.category.name = "";
       this.category.icon = "";
@@ -150,7 +149,7 @@ export default {
           message: "分类保存成功",
           type: "success"
         });
-        this.dialogCancel();
+        this.dialogFormVisible = false;
         // 刷新菜单
         this.getMenus();
         // 设置需要默认展开的菜单
@@ -170,7 +169,7 @@ export default {
           message: "分类修改成功",
           type: "success"
         });
-        this.dialogCancel();
+        this.dialogFormVisible = false;
         // 刷新菜单
         this.getMenus();
         // 设置需要默认展开的菜单
