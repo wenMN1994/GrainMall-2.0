@@ -6,7 +6,7 @@ import lombok.Data;
  * @author：Dragon Wen
  * @email：18475536452@163.com
  * @date：Created in 2020/6/25 16:41
- * @description：
+ * @description：规格参数保存Vo
  * @modified By：
  * @version: $
  */
@@ -50,5 +50,8 @@ public class AttrVo {
      */
     private Integer showDesc;
 
+    /**
+     * 属性分组id
+     */
     private Long attrGroupId;
 }
