@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.grain.mall.product.entity.AttrEntity;
+import com.grain.mall.product.service.AttrAttrgroupRelationService;
 import com.grain.mall.product.service.AttrService;
 import com.grain.mall.product.service.CategoryService;
 import com.grain.mall.product.vo.AttrGroupRelationVo;
@@ -36,6 +37,19 @@ public class AttrGroupController {
 
     @Autowired
     private AttrService attrService;
+
+    @Autowired
+    private AttrAttrgroupRelationService relationService;
+
+    /**
+     * 添加属性与分组关联关系
+     * @return
+     */
+    @PostMapping("/attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos){
+        relationService.saveBatch(vos);
+        return R.ok();
+    }
 
     /**
      * 获取属性分组的关联的所有属性
