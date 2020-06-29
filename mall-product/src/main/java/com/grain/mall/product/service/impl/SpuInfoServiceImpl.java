@@ -65,7 +65,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
         return new PageUtils(page);
     }
-
+    //TODO 高级部分完善
     @Transactional
     @Override
     public void saveSpuInfo(SpuSaveVo vo) {
