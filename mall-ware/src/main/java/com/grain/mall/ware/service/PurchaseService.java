@@ -3,6 +3,7 @@ package com.grain.mall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.ware.entity.PurchaseEntity;
+import com.grain.mall.ware.vo.MergeVo;
 
 import java.util.Map;
 
@@ -23,5 +24,11 @@ public interface PurchaseService extends IService<PurchaseEntity> {
      * @return
      */
     PageUtils queryPageUnreceive(Map<String, Object> params);
+
+    /**
+     * 合并采购需求
+     * @param mergeVo
+     */
+    void mergePurchase(MergeVo mergeVo);
 }
 
