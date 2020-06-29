@@ -13,6 +13,8 @@ spring:
   # 应用名称
   application:
     name: mall-product
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
 # mybatis配置信息
 mybatis-plus:
@@ -30,3 +32,4 @@ server:
 logging:
   level:
     com.grain.mall: debug
+
