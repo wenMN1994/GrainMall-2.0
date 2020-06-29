@@ -19,3 +19,7 @@ mybatis-plus:
 
 server:
   port: 11001
+
+logging:
+  level:
+    com.grain.mall: debug
