@@ -1,7 +1,11 @@
 package com.grain.mall.ware.service.impl;
 
+import com.grain.common.utils.R;
+import com.grain.mall.ware.feign.ProductFeignService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -18,6 +22,9 @@ import org.springframework.util.StringUtils;
 
 @Service("purchaseDetailService")
 public class PurchaseDetailServiceImpl extends ServiceImpl<PurchaseDetailDao, PurchaseDetailEntity> implements PurchaseDetailService {
+
+    @Autowired
+    ProductFeignService productFeignService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -57,6 +64,23 @@ public class PurchaseDetailServiceImpl extends ServiceImpl<PurchaseDetailDao, Pu
         List<PurchaseDetailEntity> purchaseId = this.list(new QueryWrapper<PurchaseDetailEntity>().eq("purchase_id", id));
 
         return purchaseId;
+    }
+
+    @Override
+    public void savePurchaseDetail(PurchaseDetailEntity purchaseDetail) {
+        /**
+         * TODO 统计SKU采购金额（业务逻辑有误，待修复）
+         */
+        R info = productFeignService.info(purchaseDetail.getSkuId());
+        Map<String,Object> data = (Map<String, Object>) info.get("skuInfo");
+
+        if(info.getCode() == 0){
+            BigDecimal skuPrice = new BigDecimal(data.get("price").toString());
+            BigDecimal skuNum = new BigDecimal(purchaseDetail.getSkuNum().toString());
+            purchaseDetail.setSkuPrice(skuPrice.multiply(skuNum));
+        }
+
+        this.save(purchaseDetail);
     }
 
 }
