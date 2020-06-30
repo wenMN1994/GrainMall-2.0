@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.ware.entity.PurchaseEntity;
 import com.grain.mall.ware.vo.MergeVo;
+import com.grain.mall.ware.vo.PurchaseDoneVo;
 
 import java.util.List;
 import java.util.Map;
@@ -37,5 +38,11 @@ public interface PurchaseService extends IService<PurchaseEntity> {
      * @param ids
      */
     void received(List<Long> ids);
+
+    /**
+     * 完成采购
+     * @param doneVo
+     */
+    void done(PurchaseDoneVo doneVo);
 }
 

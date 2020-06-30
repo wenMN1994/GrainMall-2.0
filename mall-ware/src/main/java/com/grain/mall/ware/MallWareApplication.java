@@ -1,10 +1,9 @@
 package com.grain.mall.ware;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @author：Dragon Wen
@@ -14,8 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @modified By：
  * @version: $
  */
-@EnableTransactionManagement
-@MapperScan("com.grain.mall.ware.dao")
+@EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
 public class MallWareApplication {
