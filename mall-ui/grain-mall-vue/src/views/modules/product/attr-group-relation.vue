@@ -169,7 +169,6 @@ export default {
         this.innerdataListSelections.forEach(item => {
           postData.push({ attrId: item.attrId, attrGroupId: this.attrGroupId });
         });
-        console.log("postData: ", postData)
         this.$http({
           url: this.$http.adornUrl("/product/attrgroup/attr/relation"),
           method: "post",

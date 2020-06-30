@@ -1,7 +1,7 @@
-<template> 
+<template> 
   <div>
     <el-upload
-      action="http://grain-mall-dragon.oss-cn-shenzhen.aliyuncs.com"
+      action="http://gulimall-hello.oss-cn-beijing.aliyuncs.com"
       :data="dataObj"
       list-type="picture"
       :multiple="false" :show-file-list="showFileList"
@@ -21,6 +21,7 @@
 <script>
    import {policy} from './policy'
    import { getUUID } from '@/utils'
+
   export default {
     name: 'singleUpload',
     props: {
@@ -79,14 +80,14 @@
         let _self = this;
         return new Promise((resolve, reject) => {
           policy().then(response => {
-            console.log("响应数据:",response);
+            console.log("响应的数据",response);
             _self.dataObj.policy = response.data.policy;
             _self.dataObj.signature = response.data.signature;
             _self.dataObj.ossaccessKeyId = response.data.accessid;
-            _self.dataObj.key = response.data.dir+getUUID()+'_${filename}';
+            _self.dataObj.key = response.data.dir +getUUID()+'_${filename}';
             _self.dataObj.dir = response.data.dir;
             _self.dataObj.host = response.data.host;
-            console.log("响应数据222:",_self.dataObj);
+            console.log("响应的数据222。。。",_self.dataObj);
             resolve(true)
           }).catch(err => {
             reject(false)
@@ -104,4 +105,7 @@
   }
 </script>
 <style>
+
 </style>
+
+

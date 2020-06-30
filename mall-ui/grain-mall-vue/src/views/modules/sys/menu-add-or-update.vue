@@ -3,7 +3,7 @@
     :title="!dataForm.id ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="120px">
       <el-form-item label="类型" prop="type">
         <el-radio-group v-model="dataForm.type">
           <el-radio v-for="(type, index) in dataForm.typeList" :label="index" :key="index">{{ type }}</el-radio>
@@ -23,7 +23,7 @@
             node-key="menuId"
             ref="menuListTree"
             @current-change="menuListTreeCurrentChangeHandle"
-            :default-expand-all="true"
+            :accordion="true"
             :highlight-current="true"
             :expand-on-click-node="false">
           </el-tree>

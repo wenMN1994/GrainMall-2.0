@@ -151,12 +151,8 @@ export default {
         url: this.$http.adornUrl("/product/categorybrandrelation/delete"),
         method: "post",
         data: this.$http.adornData([id], false)
-      }).then(() => {
-        this.getCateRelation()
-        this.$message({
-          message: '移除成功',
-          type: 'success'
-        })
+      }).then(({ data }) => {
+        this.getCateRelation();
       });
     },
     updateCatelogHandle(brandId) {
@@ -236,11 +232,11 @@ export default {
     },
     // 删除
     deleteHandle(id) {
-      const ids = id
+      var ids = id
         ? [id]
         : this.dataListSelections.map(item => {
-          return item.brandId;
-        });
+            return item.brandId;
+          });
       this.$confirm(
         `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
         "提示",
