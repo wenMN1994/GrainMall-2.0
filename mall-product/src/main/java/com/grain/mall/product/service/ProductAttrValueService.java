@@ -18,6 +18,24 @@ public interface ProductAttrValueService extends IService<ProductAttrValueEntity
 
     PageUtils queryPage(Map<String, Object> params);
 
+    /**
+     * 保存
+     * @param collect
+     */
     void saveProductAttr(List<ProductAttrValueEntity> collect);
+
+    /**
+     * 获取spu规格
+     * @param spuId
+     * @return
+     */
+    List<ProductAttrValueEntity> baseAttrListforspu(Long spuId);
+
+    /**
+     * 修改商品规格
+     * @param spuId
+     * @param entities
+     */
+    void updateSpuAttr(Long spuId, List<ProductAttrValueEntity> entities);
 }
 
