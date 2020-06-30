@@ -10,6 +10,7 @@ import com.grain.mall.ware.vo.PurchaseItemDoneVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,6 +62,8 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
     @Transactional
     @Override
     public void mergePurchase(MergeVo mergeVo) {
+        // TODO 确认采购单状态是0,1才可以合并
+
         Long purchaseId = mergeVo.getPurchaseId();
         if(purchaseId == null){
             // 1、新建一个采购单
@@ -72,9 +75,15 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
             purchaseId = purchaseEntity.getId();
         }
 
-        // TODO 确认采购单状态是0,1才可以合并
-
+        // 获取仓库id
         List<Long> items = mergeVo.getItems();
+        Long wareId = null;
+        if(items != null || items.size() > 0){
+            PurchaseDetailEntity id = purchaseDetailService.getById(items.get(0));
+            wareId = id.getWareId();
+        }
+
+        // 更新采购需求状态和关联采购单
         Long finalPurchaseId = purchaseId;
         List<PurchaseDetailEntity> collect = items.stream().map(i -> {
             PurchaseDetailEntity detailEntity = new PurchaseDetailEntity();
@@ -83,11 +92,24 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
             detailEntity.setStatus(WareConstant.PurchaseDetailStatusEnum.ASSIGNED.getCode());
             return detailEntity;
         }).collect(Collectors.toList());
-
         purchaseDetailService.updateBatchById(collect);
 
+        // 计算采购单总金额
+        BigDecimal account = new BigDecimal(0.0000);
+        List<PurchaseDetailEntity> purchaseDetailEntities = purchaseDetailService.listDetailByPurchaseId(purchaseId);
+        for (PurchaseDetailEntity detailEntity : purchaseDetailEntities) {
+            account = detailEntity.getSkuPrice().add(account);
+        }
+
+        // 更新采购单
         PurchaseEntity purchaseEntity = new PurchaseEntity();
         purchaseEntity.setId(purchaseId);
+        if(wareId != null){
+            purchaseEntity.setWareId(wareId);
+        }
+        if(account != null){
+            purchaseEntity.setAmount(account);
+        }
         purchaseEntity.setUpdateTime(new Date());
         this.updateById(purchaseEntity);
     }
@@ -131,7 +153,6 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
     @Override
     public void done(PurchaseDoneVo doneVo) {
         Long id = doneVo.getId();
-
 
         // 2、改变采购项的状态
         Boolean flag = true;
