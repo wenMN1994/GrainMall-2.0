@@ -71,7 +71,7 @@ public class PurchaseDetailController {
     @RequestMapping("/update")
     // @RequiresPermissions("ware:purchasedetail:update")
     public R update(@RequestBody PurchaseDetailEntity purchaseDetail){
-		purchaseDetailService.updateById(purchaseDetail);
+		purchaseDetailService.updatePurchaseDetailById(purchaseDetail);
 
         return R.ok();
     }

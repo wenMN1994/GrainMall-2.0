@@ -21,5 +21,7 @@ public interface PurchaseDetailService extends IService<PurchaseDetailEntity> {
     List<PurchaseDetailEntity> listDetailByPurchaseId(Long id);
 
     void savePurchaseDetail(PurchaseDetailEntity purchaseDetail);
+
+    void updatePurchaseDetailById(PurchaseDetailEntity purchaseDetail);
 }
 

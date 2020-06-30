@@ -2,6 +2,7 @@ package com.grain.mall.ware.service.impl;
 
 import com.grain.common.utils.R;
 import com.grain.mall.ware.feign.ProductFeignService;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,9 +69,21 @@ public class PurchaseDetailServiceImpl extends ServiceImpl<PurchaseDetailDao, Pu
 
     @Override
     public void savePurchaseDetail(PurchaseDetailEntity purchaseDetail) {
-        /**
-         * TODO 统计SKU采购金额（业务逻辑有误，待修复）
-         */
+
+        // TODO 统计SKU采购金额（业务逻辑有误，待修复）
+        CalculateSkuPurchasePrice(purchaseDetail);
+
+        this.save(purchaseDetail);
+    }
+
+    @Override
+    public void updatePurchaseDetailById(PurchaseDetailEntity purchaseDetail) {
+        CalculateSkuPurchasePrice(purchaseDetail);
+
+        this.updateById(purchaseDetail);
+    }
+
+    private void CalculateSkuPurchasePrice(PurchaseDetailEntity purchaseDetail) {
         R info = productFeignService.info(purchaseDetail.getSkuId());
         Map<String,Object> data = (Map<String, Object>) info.get("skuInfo");
 
@@ -79,8 +92,6 @@ public class PurchaseDetailServiceImpl extends ServiceImpl<PurchaseDetailDao, Pu
             BigDecimal skuNum = new BigDecimal(purchaseDetail.getSkuNum().toString());
             purchaseDetail.setSkuPrice(skuPrice.multiply(skuNum));
         }
-
-        this.save(purchaseDetail);
     }
 
 }
