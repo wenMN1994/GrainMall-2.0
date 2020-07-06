@@ -10,11 +10,10 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-  # 应用名称
-  application:
-    name: mall-product
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    cache: false
 
 # mybatis配置信息
 mybatis-plus:
