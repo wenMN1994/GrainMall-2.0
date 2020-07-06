@@ -201,10 +201,10 @@
       <div class="header_banner">
         <div class="header_main_left">
           <ul>
-            <li>
-              <a href="#" class="header_main_left_a" ctg-data="3"><b>家用电器</b></a>
+            <li th:each="category : ${categorys}">
+              <a href="#" class="header_main_left_a" th:attr="ctg-data=${category.getCatId()}" th:text="${category.getName()}"><b>家用电器</b></a>
             </li>
-            <li class="header_li2">
+            <!--<li class="header_li2">
               <a href="#" class="header_main_left_a" ctg-data="2,4"><b>手机</b> / <b>运营商</b> / <b>数码</b></a>
 
             </li>
@@ -259,7 +259,7 @@
             <li class="header_li2">
               <a href="#" class="header_main_left_a" ctg-data="19"><b>彩票</b> / <b>酒店</b> / <b>旅游</b> / <b>生活</b></a>
 
-            </li>
+            </li>-->$
 
           </ul>
 

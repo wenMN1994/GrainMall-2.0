@@ -37,6 +37,16 @@ public interface CategoryService extends IService<CategoryEntity> {
      */
     Long[] findCatelogPath(Long catelogId);
 
+    /**
+     * 级联更新所有关联的数据
+     * @param category
+     */
     void updateCascade(CategoryEntity category);
+
+    /**
+     * 获取一级分类
+     * @return
+     */
+    List<CategoryEntity> getLevelOneCategorys();
 }
 
