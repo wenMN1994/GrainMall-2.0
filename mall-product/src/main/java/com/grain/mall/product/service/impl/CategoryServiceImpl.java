@@ -1,6 +1,7 @@
 package com.grain.mall.product.service.impl;
 
 import com.grain.mall.product.service.CategoryBrandRelationService;
+import com.grain.mall.product.vo.CategoryTwoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -86,8 +87,46 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public List<CategoryEntity> getLevelOneCategorys() {
-        List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("cat_level", 1));
+        List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
         return categoryEntities;
+    }
+
+    @Override
+    public Map<String, List<CategoryTwoVo>> getCategoryJson() {
+
+        // 查出所有一级分类
+        List<CategoryEntity> levelOneCategorys = getLevelOneCategorys();
+
+        //封装数据
+        Map<String, List<CategoryTwoVo>> parent_cid = levelOneCategorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            // 每一个的一级分类，查到这个一级分类的二级分类
+            List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+
+            // 封装上面的结果
+            List<CategoryTwoVo> categoryTwoVos = null;
+            if (categoryEntities != null) {
+                categoryTwoVos = categoryEntities.stream().map(levelTwo -> {
+                    CategoryTwoVo categoryTwoVo = new CategoryTwoVo(v.getCatId().toString(), null, levelTwo.getCatId().toString(), levelTwo.getName());
+
+                    // 找当前二级分类的三级分类封装成vo
+                    List<CategoryEntity> levelThreeCategory = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", levelTwo.getCatId()));
+                    if(levelThreeCategory != null){
+                        List<CategoryTwoVo.CategoryThreeVo> categoryThreeVos = levelThreeCategory.stream().map(levelThree -> {
+                            CategoryTwoVo.CategoryThreeVo categoryThreeVo = new CategoryTwoVo.CategoryThreeVo(levelTwo.getCatId().toString(), levelThree.getCatId().toString(), levelThree.getName());
+
+                            return categoryThreeVo;
+                        }).collect(Collectors.toList());
+                        categoryTwoVo.setCatalog3List(categoryThreeVos);
+                    }
+
+                    return categoryTwoVo;
+                }).collect(Collectors.toList());
+            }
+
+            return categoryTwoVos;
+        }));
+
+        return parent_cid;
     }
 
     private List<Long> findParentPath(Long catelogId, List<Long> paths){
