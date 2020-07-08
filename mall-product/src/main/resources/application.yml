@@ -33,5 +33,5 @@ server:
 
 logging:
   level:
-    com.grain.mall: debug
+    com.grain.mall: error
 

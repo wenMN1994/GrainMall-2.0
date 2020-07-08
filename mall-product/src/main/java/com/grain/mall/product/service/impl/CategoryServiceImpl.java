@@ -1,8 +1,11 @@
 package com.grain.mall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.grain.mall.product.service.CategoryBrandRelationService;
 import com.grain.mall.product.vo.CategoryTwoVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +24,7 @@ import com.grain.mall.product.dao.CategoryDao;
 import com.grain.mall.product.entity.CategoryEntity;
 import com.grain.mall.product.service.CategoryService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 
 @Service("categoryService")
@@ -28,6 +32,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Autowired
     CategoryBrandRelationService categoryBrandRelationService;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -91,8 +98,40 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return categoryEntities;
     }
 
+    // TODO 产生堆外内存溢出：OutOfDirectMemoryError
+    // SpringBoot 2.0以后默认使用lettuce作为操作redis的客户端，它使用netty进行网络通信。
+    // lettuce 的bug导致netty堆外内存溢出  -Xmx300m netty如果没有指定堆外内存，默认使用-Xmx300m
+    // 可以通过-Dio.netty.maxDirectMemory进行设置
+    // 解决方案：不能使用-Dio.netty.maxDirectMemory进行设置
+    // 1、升级lettuce客户端   2、切换使用jedis
     @Override
     public Map<String, List<CategoryTwoVo>> getCategoryJson() {
+        // 给缓存中放json字符串，拿出的json字符串，还要逆转为能用的对象类型【序列化与反序列化】
+
+        // 1、加入缓存逻辑，缓存中的数据是json字符串
+        // JSON跨语言，跨平台兼容
+        String catalogJSON = stringRedisTemplate.opsForValue().get("catalogJSON");
+
+        if(StringUtils.isEmpty(catalogJSON)){
+            // 2、缓存中没有，查询数据库
+            Map<String, List<CategoryTwoVo>> categoryJsonFromDb = getCategoryJsonFromDb();
+            // 3、查到的数据再放入缓存，将对象转为json放在缓存中
+            String jsonString = JSON.toJSONString(categoryJsonFromDb);
+            stringRedisTemplate.opsForValue().set("catalogJSON", jsonString);
+            return categoryJsonFromDb;
+        }
+
+        Map<String, List<CategoryTwoVo>> result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<CategoryTwoVo>>>() {
+        });
+
+        return result;
+    }
+
+    /**
+     * 从数据库查询并封装分类数据
+     * @return
+     */
+    public Map<String, List<CategoryTwoVo>> getCategoryJsonFromDb() {
 
         /**
          * 将数据库多次查询变为一次查询
