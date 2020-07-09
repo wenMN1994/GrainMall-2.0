@@ -55,6 +55,20 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @ControllerAdvice
  *  1）、编写异常处理类，使用@ControllerAdvice。
  *  2）、使用@ExceptionHandler标注方法可以处理的异常。
+ *
+ * 5、模板引擎
+ *  1）、引入依赖：spring-boot-starter-thymeleaf  开发过程中关闭缓存：spring.thymeleaf.cache=false
+ *  2）、静态资源都放在static文件夹下就可以按照路径直接访问，上线后部署到nginx实现东进分离
+ *  3）、页面放在templates下，直接访问。  SpringBoot，访问项目的时候，默认会找index
+ *  4）、页面修改不重启服务实时更新
+ *      1）、引入依赖：spring-boot-devtools
+ *
+ * 6、整合redis
+ *  1）、引入依赖：
+ *  2）、简单配置redis的host等信息
+ *  3）、使用SpringBoot自动配置好的StringRedisTemplate来操作redis
+ *      redis ----> Map; 存放数据key，数据中value
+ *
  * @modified By：
  * @version: $
  */
