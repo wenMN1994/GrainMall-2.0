@@ -19,6 +19,8 @@ spring:
     port: 6379
   cache:
     type: redis
+    redis:
+      time-to-live: 3600000 #毫秒为单位
 
 # mybatis配置信息
 mybatis-plus:
