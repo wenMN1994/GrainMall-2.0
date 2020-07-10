@@ -3,6 +3,7 @@ package com.grain.mall.product;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -69,9 +70,38 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  *  3）、使用SpringBoot自动配置好的StringRedisTemplate来操作redis
  *      redis ----> Map; 存放数据key，数据中value
  *
+ * 7、整合redisson作为分布式锁等功能框架
+ *   1）、引入依赖
+ *      <dependency>
+ *          <groupId>org.redisson</groupId>
+ *          <artifactId>redisson</artifactId>
+ *          <version>3.12.0</version>
+ *      </dependency>
+ *   2）、配置redisson
+ *   3）、使用：参照文档https://github.com/redisson/redisson/wiki
+ *
+ * 8、整合SpringCache简化开发
+ *   1）、引入依赖
+ *      spring-boot-starter-cache、spring-boot-starter-data-redis
+ *   2）、写配置
+ *      （1）、自动配置了哪些
+ *          CacheAutoConfiguration会导入RedisAutoConfiguration
+ *          自动配置好了缓存管理器RedisCacheManager
+ *      （2）配置使用redis作为缓存
+ *          spring.cache.type=redis
+ *   3）、测试使用缓存
+ *      @Cacheable: Triggers cache population.触发将数据保存到缓存的操作
+ *      @CacheEvict: Triggers cache eviction.触发将数据从缓存删除的操作
+ *      @CachePut: Updates the cache without interfering with the method execution.不影响方法执行更新缓存
+ *      @Caching: Regroups multiple cache operations to be applied on a method.组合以上多个操作
+ *      @CacheConfig: Shares some common cache-related settings at class-level.在类级别共享缓存的相同配置
+ *      （1）、开启缓存功能 @EnableCaching
+ *      （2）、只需要使用注解就能完成缓存操作
+ *
  * @modified By：
  * @version: $
  */
+@EnableCaching
 @EnableFeignClients(basePackages = "com.grain.mall.product.feign")
 @EnableDiscoveryClient
 @MapperScan("com.grain.mall.product.dao")

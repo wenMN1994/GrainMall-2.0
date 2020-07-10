@@ -7,6 +7,7 @@ import com.grain.mall.product.vo.CategoryTwoVo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -97,8 +98,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
+    /**
+     * 1、每一个需要缓存的数据我们都来指定要放到哪个名字的缓存。【缓存的分区（按照业务类型分）】
+     * 2、@Cacheable({"category"})
+     *      代表当前方法的结果需要缓存，如果缓存中有，方法不调用。如果方法中没有，会调用方法，最后将方法的结果放入缓存
+     * @return
+     */
+    //
+    @Cacheable({"category"}) // 代表当前方法的结果需要缓存，如果缓存中有，方法不调用。如果方法中没有，会调用方法
     @Override
     public List<CategoryEntity> getLevelOneCategorys() {
+        System.out.println("getLevelOneCategorys......");
         List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
         return categoryEntities;
     }

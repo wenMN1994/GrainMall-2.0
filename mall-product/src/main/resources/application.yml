@@ -17,6 +17,8 @@ spring:
   redis:
     host: 192.168.56.10
     port: 6379
+  cache:
+    type: redis
 
 # mybatis配置信息
 mybatis-plus:
@@ -34,4 +36,3 @@ server:
 logging:
   level:
     com.grain.mall: error
-
