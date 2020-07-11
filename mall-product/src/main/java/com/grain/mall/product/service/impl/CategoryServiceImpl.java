@@ -7,7 +7,9 @@ import com.grain.mall.product.vo.CategoryTwoVo;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -91,6 +93,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *
      * @param category
      */
+
+//    @Caching(evict = {
+//            @CacheEvict(value = "category", key = "'getLevelOneCategorys'"),
+//            @CacheEvict(value = "category", key = "'getCategoryJson'"),
+//    })
+    @CacheEvict(value = "category", allEntries = true) //失效模式
     @Transactional
     @Override
     public void updateCascade(CategoryEntity category) {
@@ -123,14 +131,59 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return categoryEntities;
     }
 
+    @Cacheable(value = {"category"}, key = "#root.methodName")
+    @Override
+    public Map<String, List<CategoryTwoVo>> getCategoryJson() {
+
+        System.out.println("查询了数据库。。。。。");
+
+        /**
+         * 将数据库多次查询变为一次查询
+         */
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
+
+        // 查出所有一级分类
+        List<CategoryEntity> levelOneCategorys = getParent_cid(selectList, 0L);
+
+        //封装数据
+        Map<String, List<CategoryTwoVo>> parent_cid = levelOneCategorys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
+            // 每一个的一级分类，查到这个一级分类的二级分类
+            List<CategoryEntity> categoryEntities = getParent_cid(selectList, v.getCatId());
+
+            // 封装上面的结果
+            List<CategoryTwoVo> categoryTwoVos = null;
+            if (categoryEntities != null) {
+                categoryTwoVos = categoryEntities.stream().map(levelTwo -> {
+                    CategoryTwoVo categoryTwoVo = new CategoryTwoVo(v.getCatId().toString(), null, levelTwo.getCatId().toString(), levelTwo.getName());
+
+                    // 找当前二级分类的三级分类封装成vo
+                    List<CategoryEntity> levelThreeCategory = getParent_cid(selectList, levelTwo.getCatId());
+                    if (levelThreeCategory != null) {
+                        List<CategoryTwoVo.CategoryThreeVo> categoryThreeVos = levelThreeCategory.stream().map(levelThree -> {
+                            CategoryTwoVo.CategoryThreeVo categoryThreeVo = new CategoryTwoVo.CategoryThreeVo(levelTwo.getCatId().toString(), levelThree.getCatId().toString(), levelThree.getName());
+
+                            return categoryThreeVo;
+                        }).collect(Collectors.toList());
+                        categoryTwoVo.setCatalog3List(categoryThreeVos);
+                    }
+
+                    return categoryTwoVo;
+                }).collect(Collectors.toList());
+            }
+
+            return categoryTwoVos;
+        }));
+
+        return parent_cid;
+    }
+
     // TODO 产生堆外内存溢出：OutOfDirectMemoryError
     // SpringBoot 2.0以后默认使用lettuce作为操作redis的客户端，它使用netty进行网络通信。
     // lettuce 的bug导致netty堆外内存溢出  -Xmx300m netty如果没有指定堆外内存，默认使用-Xmx300m
     // 可以通过-Dio.netty.maxDirectMemory进行设置
     // 解决方案：不能使用-Dio.netty.maxDirectMemory进行设置
     // 1、升级lettuce客户端   2、切换使用jedis
-    @Override
-    public Map<String, List<CategoryTwoVo>> getCategoryJson() {
+    public Map<String, List<CategoryTwoVo>> getCategoryJsonTemp() {
         // 给缓存中放json字符串，拿出的json字符串，还要逆转为能用的对象类型【序列化与反序列化】
 
         // 1、加入缓存逻辑，缓存中的数据是json字符串
