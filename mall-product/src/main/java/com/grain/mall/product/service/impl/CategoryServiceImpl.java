@@ -119,7 +119,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *      （1）、指定生成的缓存使用的key：key属性指定，接受一个SpEL
      *          SpEL的详情参考：https://docs.spring.io/spring/docs/5.1.16.RELEASE/spring-framework-reference/integration.html#cache-annotations-cacheable-condition
      *      （2）、指定缓存的数据的存活时间：配置文件中修改ttl
-     *      （3）、将数据保存为json格式
+     *      （3）、将数据保存为json格式：自定义RedisCacheConfiguration即可
      * @return
      */
     //
@@ -131,7 +131,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return categoryEntities;
     }
 
-    @Cacheable(value = {"category"}, key = "#root.methodName")
+    @Cacheable(value = {"category"}, key = "#root.methodName", sync = true)
     @Override
     public Map<String, List<CategoryTwoVo>> getCategoryJson() {
 

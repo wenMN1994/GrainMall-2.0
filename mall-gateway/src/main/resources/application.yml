@@ -48,5 +48,10 @@ spring:
         - id: grain_mall_host_route
           uri: lb://mall-product
           predicates:
-            - Host=**.grainmall.com,grainmall.com
+            - Host=grainmall.com
+
+        - id: grain_mall_search_route
+          uri: lb://mall-search
+          predicates:
+            - Host=search.grainmall.com
 # 前端项目 /api
