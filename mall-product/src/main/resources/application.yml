@@ -3,7 +3,7 @@ spring:
   datasource:
     username: root
     password: root
-    url: jdbc:mysql://192.168.56.10:3306/grain_mall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.31.70:3306/grain_mall_pms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
   cloud:
     # nacos注册中心
@@ -15,12 +15,8 @@ spring:
   thymeleaf:
     cache: false
   redis:
-    host: 192.168.56.10
+    host: 192.168.31.70
     port: 6379
-  cache:
-    type: redis
-    redis:
-      time-to-live: 3600000 #毫秒为单位
 
 # mybatis配置信息
 mybatis-plus:
