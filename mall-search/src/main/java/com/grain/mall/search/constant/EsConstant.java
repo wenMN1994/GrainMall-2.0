@@ -11,4 +11,5 @@ package com.grain.mall.search.constant;
 public class EsConstant {
 
     public static final String PRODUCT_INDEX = "grain_mall_product"; //
+    public static final Integer PRODUCT_PAGE_SIZE = 2;
 }
