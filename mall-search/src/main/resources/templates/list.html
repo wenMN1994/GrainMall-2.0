@@ -784,10 +784,10 @@
                     <div class="sl_value">
                         <div class="sl_value_logo">
                             <ul>
-                                <li th:each="brand:${result.getBrands()}">
-                                    <a href="#">
-                                        <img th:src="${brand.getBrandImg()}" th:alt="${brand.getBrandName()}">
-                                        <div th:text="${brand.getBrandName()}">
+                                <li th:each="brand:${result.brands}">
+                                    <a th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+')'}">
+                                        <img th:src="${brand.brandImg}" th:alt="${brand.brandName}">
+                                        <div th:text="${brand.brandName}">
                                             华为(HUAWEI)
                                         </div>
                                     </a>
@@ -815,7 +815,7 @@
                     </div>
                     <div class="sl_value">
                         <ul>
-                            <li th:each="catalog:${result.catalogs}"><a href="#" th:text="${catalog.catalogName}">0-安卓（Android）</a></li>
+                            <li th:each="catalog:${result.catalogs}"><a th:href="${'javascript:searchProducts(&quot;catalog3Id&quot;,'+catalog.catalogId+')'}" th:text="${catalog.catalogName}">0-安卓（Android）</a></li>
                         </ul>
                     </div>
                 </div>
@@ -864,7 +864,7 @@
                     </div>
                     <div class="sl_value">
                         <ul>
-                            <li th:each="val:${attr.attrValue}"><a href="#" th:text="${val}">5.56英寸及以上</a></li>
+                            <li th:each="val:${attr.attrValue}"><a th:href="${'javascript:searchProducts(&quot;attrs&quot;,&quot;'+ attr.attrId + '_' + val +'&quot;)'}" th:text="${val}">5.56英寸及以上</a></li>
                         </ul>
                     </div>
                 </div>
@@ -2068,6 +2068,15 @@
     },function(){
         $(this).css("color","#727272")
     })
+
+    function searchProducts(name, value) {
+        if(location.href.indexOf("?") !=  -1){
+            location.href = location.href + "&" + name + "=" + value
+        }else {
+            location.href = location.href + "?" + name + "=" + value
+        }
+
+    }
 </script>
 </body>
 </html>
