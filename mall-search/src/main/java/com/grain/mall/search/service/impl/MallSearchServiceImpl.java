@@ -89,8 +89,8 @@ public class MallSearchServiceImpl implements MallSearchService {
             boolQuery.must(QueryBuilders.matchQuery("skuTitle", param.getKeyword()));
         }
         // 1.2、构建bool - filter - 按照三级分类id查询
-        if(param.getCategory3Id() != null) {
-            boolQuery.filter(QueryBuilders.termQuery("catalogId", param.getCategory3Id()));
+        if(param.getCatalog3Id() != null) {
+            boolQuery.filter(QueryBuilders.termQuery("catalogId", param.getCatalog3Id()));
         }
         // 1.2、构建bool - filter - 按照品牌id查询
         if(param.getBrandId() != null && param.getBrandId().size() > 0) {

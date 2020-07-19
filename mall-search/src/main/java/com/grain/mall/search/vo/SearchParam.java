@@ -17,7 +17,7 @@ public class SearchParam {
 
     private String keyword; // 页面传递过来的全文匹配关键字
 
-    private Long category3Id; // 三级分类id
+    private Long catalog3Id; // 三级分类id
 
     private String sort; // 排序条件
 

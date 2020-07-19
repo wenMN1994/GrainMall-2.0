@@ -2083,11 +2083,17 @@
         var pn = $(this).attr("pn");
 
         var href = location.href;
-        if(href.indexOf("pageNum") != -1){
-            location.href = replaceParamVal(href, "pageNum", pn);
-        }else {
-            location.href = location.href + "&pageNum=" + pn;
+        if(href.indexOf("?") != -1){
+            if(href.indexOf("pageNum") != -1){
+                location.href = replaceParamVal(href, "pageNum", pn);
+            }else {
+                location.href = location.href + "&pageNum=" + pn;
+            }
+        } else {
+            location.href = location.href + "?pageNum=" + pn;
         }
+
+
         return false;
     })
 
