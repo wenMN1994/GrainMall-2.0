@@ -1,10 +1,14 @@
 package com.grain.mall.search.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.grain.common.to.es.SkuEsModel;
+import com.grain.common.utils.R;
 import com.grain.mall.search.config.MallElasticSearchConfig;
 import com.grain.mall.search.constant.EsConstant;
+import com.grain.mall.search.feign.ProductFeignService;
 import com.grain.mall.search.service.MallSearchService;
+import com.grain.mall.search.vo.AttrResponseVo;
 import com.grain.mall.search.vo.SearchParam;
 import com.grain.mall.search.vo.SearchResult;
 import org.apache.lucene.search.join.ScoreMode;
@@ -31,6 +35,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +54,9 @@ public class MallSearchServiceImpl implements MallSearchService {
 
     @Autowired
     RestHighLevelClient client;
+
+    @Autowired
+    ProductFeignService productFeignService;
 
     @Override
     public SearchResult search(SearchParam param) {
@@ -295,6 +304,36 @@ public class MallSearchServiceImpl implements MallSearchService {
             pageNavs.add(i);
         }
         result.setPageNavs(pageNavs);
+
+        // 8、构建面包屑导航功能
+        if(param.getAttrs() != null && param.getAttrs().size() > 0){
+            List<SearchResult.NavVo> navVos = param.getAttrs().stream().map(attr -> {
+                SearchResult.NavVo navVo = new SearchResult.NavVo();
+                String[] s = attr.split("_");
+                navVo.setNavValue(s[1]);
+                R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                if(r.getCode() == 0){
+                    AttrResponseVo data = r.getData("attr", new TypeReference<AttrResponseVo>() {
+                    });
+                    navVo.setNavName(data.getAttrName());
+                }else {
+                    navVo.setNavName(s[0]);
+                }
+
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(attr, "UTF-8");
+                    encode = encode.replace("+", "%20");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String replace = param.get_queryString().replace("&attrs=" + encode, "");
+                navVo.setLink("http://search.grainmall.com/list.html?"+replace);
+
+                return navVo;
+            }).collect(Collectors.toList());
+            result.setNavs(navVos);
+        }
 
         return result;
     }

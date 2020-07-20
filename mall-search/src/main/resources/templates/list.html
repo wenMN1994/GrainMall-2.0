@@ -763,6 +763,11 @@
             </div>
         </div>
         <i><img src="/static/search/image/right-@1x.png" alt=""></i>
+        <a class="crumb-select-item" th:each="nav:${result.navs}" th:href="${nav.link}" rel="nofollow" th:title="${nav.navValue}">
+            <b th:text="${nav.navName}">屏幕尺寸：</b>
+            <em th:text="${nav.navValue}">6.95英寸及以上</em>
+            <i></i>
+        </a>
     </div>
 </div>
 
@@ -785,7 +790,7 @@
                         <div class="sl_value_logo">
                             <ul>
                                 <li th:each="brand:${result.brands}">
-                                    <a th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+')'}">
+                                    <a th:href="${'javascript:searchProducts(&quot;brandId&quot;,'+brand.brandId+',false'+')'}">
                                         <img th:src="${brand.brandImg}" th:alt="${brand.brandName}">
                                         <div th:text="${brand.brandName}">
                                             华为(HUAWEI)
@@ -815,7 +820,7 @@
                     </div>
                     <div class="sl_value">
                         <ul>
-                            <li th:each="catalog:${result.catalogs}"><a th:href="${'javascript:searchProducts(&quot;catalog3Id&quot;,'+catalog.catalogId+')'}" th:text="${catalog.catalogName}">0-安卓（Android）</a></li>
+                            <li th:each="catalog:${result.catalogs}"><a th:href="${'javascript:searchProducts(&quot;catalog3Id&quot;,'+catalog.catalogId+',false'+')'}" th:text="${catalog.catalogName}">0-安卓（Android）</a></li>
                         </ul>
                     </div>
                 </div>
@@ -864,7 +869,7 @@
                     </div>
                     <div class="sl_value">
                         <ul>
-                            <li th:each="val:${attr.attrValue}"><a th:href="${'javascript:searchProducts(&quot;attrs&quot;,&quot;'+ attr.attrId + '_' + val +'&quot;)'}" th:text="${val}">5.56英寸及以上</a></li>
+                            <li th:each="val:${attr.attrValue}"><a th:href="${'javascript:searchProducts(&quot;attrs&quot;,&quot;'+ attr.attrId + '_' + val +'&quot;,true)'}" th:text="${val}">5.56英寸及以上</a></li>
                         </ul>
                     </div>
                 </div>
@@ -2078,12 +2083,12 @@
         $(this).css("color","#727272")
     })
 
-    function searchProducts(name, value) {
-        location.href = replaceAndAddParamVal(location.href, name, value)
+    function searchProducts(name, value, flag) {
+        location.href = replaceAndAddParamVal(location.href, name, value,flag)
     }
 
     function searchByKeyword() {
-        searchProducts("keyword",$("#keyword_input").val())
+        searchProducts("keyword",$("#keyword_input").val(),false)
     }
 
     $(".page_a").click(function () {
@@ -2095,12 +2100,23 @@
         return false;
     })
 
-    function replaceAndAddParamVal(url, paramName, replaceVal) {
+    function replaceAndAddParamVal(url, paramName, replaceVal, forceAdd) {
         var oUrl = url.toString();
         if(oUrl.indexOf(paramName) != -1){
-            var re = eval('/(' + paramName +'=)([^&]*)/gi');
-            var nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
-            return nUrl;
+            if(forceAdd){
+                var nUrl = "";
+                if(oUrl.indexOf("?") !=  -1){
+                    nUrl = oUrl + "&" + paramName + '=' + replaceVal;
+                }else {
+                    nUrl = oUrl + "?" + paramName + '=' + replaceVal;
+                }
+                return nUrl;
+            } else {
+                var re = eval('/(' + paramName +'=)([^&]*)/gi');
+                var nUrl = oUrl.replace(re, paramName + '=' + replaceVal);
+                return nUrl;
+            }
+
         }else {
             var nUrl = "";
             if(oUrl.indexOf("?") !=  -1){
@@ -2108,7 +2124,6 @@
             }else {
                 nUrl = oUrl + "?" + paramName + '=' + replaceVal;
             }
-
             return nUrl;
         }
 

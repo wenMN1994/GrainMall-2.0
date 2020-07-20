@@ -35,6 +35,19 @@ public class R extends HashMap<String, Object> {
 	 * @param <T>
 	 * @return
 	 */
+	public <T> T getData(String key, TypeReference<T> typeReference){
+		Object data = get(key); // 默认是map类型
+		String s = JSON.toJSONString(data);
+		T t = JSON.parseObject(s, typeReference);
+		return t;
+	}
+
+	/**
+	 * 利用fastjson进行逆转
+	 * @param typeReference
+	 * @param <T>
+	 * @return
+	 */
 	public <T> T getData(TypeReference<T> typeReference){
 		Object data = get("data"); // 默认是map类型
 		String s = JSON.toJSONString(data);
