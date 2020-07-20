@@ -121,13 +121,14 @@ public class MallSearchServiceImpl implements MallSearchService {
         if(!StringUtils.isEmpty(param.getSkuPrice())){
             RangeQueryBuilder rangeQuery = QueryBuilders.rangeQuery("skuPrice");
             String[] s = param.getSkuPrice().split("_");
+
             if(s.length == 2){
+                if(StringUtils.isEmpty(s[0])){
+                    rangeQuery.lte(s[1]);
+                }
                 // 区间
                 rangeQuery.gte(s[0]).lte(s[1]);
             } else if(s.length == 1){
-                if(param.getSkuPrice().startsWith("_")){
-                    rangeQuery.lte(s[0]);
-                }
 
                 if(param.getSkuPrice().endsWith("_")){
                     rangeQuery.gte(s[0]);
