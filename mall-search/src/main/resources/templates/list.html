@@ -1254,8 +1254,8 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
-                                        <i></i>
+                                    <a href="#" th:with="check=${param.hasStock}">
+                                        <input id="showHasStock" type="checkbox" th:checked="${#strings.equals(check,'1')}"></input>
                                         仅显示有货
                                     </a>
                                 </li>
@@ -2079,13 +2079,9 @@
     })
 
     function searchProducts(name, value) {
-        if(location.href.indexOf("?") !=  -1){
-            location.href = location.href + "&" + name + "=" + value
-        }else {
-            location.href = location.href + "?" + name + "=" + value
-        }
+        location.href = replaceAndAddParamVal(location.href, name, value)
     }
-    
+
     function searchByKeyword() {
         searchProducts("keyword",$("#keyword_input").val())
     }
@@ -2138,6 +2134,16 @@
 
         location.href = replaceAndAddParamVal(location.href, "skuPrice", query);
     });
+
+    $("#showHasStock").change(function () {
+        if($(this).prop('checked')){
+            location.href = replaceAndAddParamVal(location.href, "hasStock", 1);
+        } else {
+            var re = eval('/(&hasStock=)([^&]*)/gi');
+            location.href = (location.href + "").replace(re, '');
+        }
+        return false;
+    })
 </script>
 </body>
 </html>
