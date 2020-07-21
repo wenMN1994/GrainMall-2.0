@@ -7,7 +7,9 @@ ul {
   list-style: none; }
 
 a {
-  color: #000; }
+  color: #666;
+  text-decoration: none;
+  }
 
 body,
 html {
@@ -656,6 +658,33 @@ html {
     .JD_ipone .JD_ipone_bar i {
       float: left;
       margin-right: 5px; }
+	  
+	.crumb-select-item {
+		position: relative;
+		float: left;
+		height: 22px;
+		line-height: 22px;
+		border: 1px solid #DDD;
+		font-size: 12px;
+		vertical-align: top;
+		margin: 0 5px 5px 0;
+		padding: 0 26px 0 4px;
+		cursor: pointer;
+		background: #f3f3f3;
+	}
+	.crumb-select-item em {
+		color: #e4393c;
+		font-style: normal;
+	}
+	.crumb-select-item i {
+		display: block;
+		position: absolute;
+		width: 25px;
+		height: 22px;
+		right: 0;
+		top: 0;
+		background: url(../image/search.ele.png) no-repeat 7px -140px;
+	}
 
 .JD_banner {
   margin-top: 15px;
