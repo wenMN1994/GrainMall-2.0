@@ -9,6 +9,7 @@ import com.grain.mall.search.constant.EsConstant;
 import com.grain.mall.search.feign.ProductFeignService;
 import com.grain.mall.search.service.MallSearchService;
 import com.grain.mall.search.vo.AttrResponseVo;
+import com.grain.mall.search.vo.BrandVo;
 import com.grain.mall.search.vo.SearchParam;
 import com.grain.mall.search.vo.SearchResult;
 import org.apache.lucene.search.join.ScoreMode;
@@ -312,6 +313,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                 String[] s = attr.split("_");
                 navVo.setNavValue(s[1]);
                 R r = productFeignService.attrInfo(Long.parseLong(s[0]));
+                result.getAttrIds().add(Long.parseLong(s[0]));
                 if(r.getCode() == 0){
                     AttrResponseVo data = r.getData("attr", new TypeReference<AttrResponseVo>() {
                     });
@@ -320,14 +322,7 @@ public class MallSearchServiceImpl implements MallSearchService {
                     navVo.setNavName(s[0]);
                 }
 
-                String encode = null;
-                try {
-                    encode = URLEncoder.encode(attr, "UTF-8");
-                    encode = encode.replace("+", "%20");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                String replace = param.get_queryString().replace("&attrs=" + encode, "");
+                String replace = replaceQueryString(param, attr, "attrs");
                 navVo.setLink("http://search.grainmall.com/list.html?"+replace);
 
                 return navVo;
@@ -335,6 +330,38 @@ public class MallSearchServiceImpl implements MallSearchService {
             result.setNavs(navVos);
         }
 
+        // 品牌、分类
+        if(param.getBrandId() != null && param.getBrandId().size() > 0){
+            List<SearchResult.NavVo> navs = result.getNavs();
+            SearchResult.NavVo navVo = new SearchResult.NavVo();
+            navVo.setNavName("品牌");
+            R r = productFeignService.brandsInfo(param.getBrandId());
+            if(r.getCode() == 0){
+                List<BrandVo> brand = r.getData("brand", new TypeReference<List<BrandVo>>() {
+                });
+                StringBuffer buffer = new StringBuffer();
+                String replace = "";
+                for (BrandVo brandVo : brand) {
+                    buffer.append(brandVo.getBrandName()+";");
+                    replace = replaceQueryString(param, brandVo.getBrandId()+"", "brandId");
+                }
+                navVo.setNavValue(buffer.toString());
+                navVo.setLink("http://search.grainmall.com/list.html?"+replace);
+            }
+            navs.add(navVo);
+        }
+
         return result;
+    }
+
+    private String replaceQueryString(SearchParam param, String value, String key) {
+        String encode = null;
+        try {
+            encode = URLEncoder.encode(value, "UTF-8");
+            encode = encode.replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return param.get_queryString().replace("&"+ key + "=" + encode, "");
     }
 }

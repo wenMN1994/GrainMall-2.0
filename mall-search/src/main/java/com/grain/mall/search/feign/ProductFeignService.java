@@ -2,10 +2,9 @@ package com.grain.mall.search.feign;
 
 import com.grain.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author：Dragon Wen
@@ -17,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @FeignClient("mall-product")
 public interface ProductFeignService {
+
     @GetMapping("/product/attr/info/{attrId}")
-    // @RequiresPermissions("product:attr:info")
     public R attrInfo(@PathVariable("attrId") Long attrId);
+
+    @RequestMapping("/product/brand/infos")
+    public R brandsInfo(@RequestParam("brandIds") List<Long> brandIds);
 }
