@@ -1,6 +1,8 @@
 package com.grain.mall.product;
 
 import com.grain.mall.product.dao.AttrGroupDao;
+import com.grain.mall.product.dao.SkuSaleAttrValueDao;
+import com.grain.mall.product.vo.SkuItemSaleAttrVo;
 import com.grain.mall.product.vo.SkuItemVo;
 import com.grain.mall.product.vo.SpuItemAttrGroupVo;
 import org.junit.Test;
@@ -26,12 +28,18 @@ public class MallProductApplicationTests {
     RedissonClient redissonClient;
 
     @Autowired
+    SkuSaleAttrValueDao skuSaleAttrValueDao;
+
+    @Autowired
     AttrGroupDao attrGroupDao;
 
     @Test
     public void test(){
-        List<SpuItemAttrGroupVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(2L, 225L);
-        System.out.println(attrGroupWithAttrsBySpuId);
+//        List<SpuItemAttrGroupVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(2L, 225L);
+//        System.out.println(attrGroupWithAttrsBySpuId);
+        List<SkuItemSaleAttrVo> saleAttrsBySpuId = skuSaleAttrValueDao.getSaleAttrsBySpuId(2L);
+        System.out.println(saleAttrsBySpuId);
+
     }
 
     @Test

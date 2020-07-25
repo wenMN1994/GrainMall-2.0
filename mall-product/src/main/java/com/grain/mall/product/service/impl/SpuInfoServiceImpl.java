@@ -169,7 +169,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 List<Attr> attr = item.getAttr();
                 List<SkuSaleAttrValueEntity> skuSaleAttrValue = attr.stream().map(saleAttrs -> {
                     SkuSaleAttrValueEntity attrValueEntity = new SkuSaleAttrValueEntity();
-                    BeanUtils.copyProperties(saleAttrs, attr);
+                    BeanUtils.copyProperties(saleAttrs, attrValueEntity);
                     attrValueEntity.setSkuId(skuId);
                     return attrValueEntity;
                 }).collect(Collectors.toList());

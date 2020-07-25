@@ -1,6 +1,7 @@
 package com.grain.mall.product.vo;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @modified By：
  * @version: $
  */
+@ToString
 @Data
 public class SkuItemSaleAttrVo {
     /**
@@ -25,5 +27,5 @@ public class SkuItemSaleAttrVo {
     /**
      * 属性值
      */
-    private List<String> attrValues;
+    private String attrValues;
 }
