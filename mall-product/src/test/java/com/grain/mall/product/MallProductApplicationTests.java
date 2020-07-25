@@ -1,5 +1,8 @@
 package com.grain.mall.product;
 
+import com.grain.mall.product.dao.AttrGroupDao;
+import com.grain.mall.product.vo.SkuItemVo;
+import com.grain.mall.product.vo.SpuItemAttrGroupVo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redisson.api.RedissonClient;
@@ -10,6 +13,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,6 +24,15 @@ public class MallProductApplicationTests {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Autowired
+    AttrGroupDao attrGroupDao;
+
+    @Test
+    public void test(){
+        List<SpuItemAttrGroupVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(2L, 225L);
+        System.out.println(attrGroupWithAttrsBySpuId);
+    }
 
     @Test
     public void redisson() {
