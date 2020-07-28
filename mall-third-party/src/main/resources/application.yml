@@ -11,5 +11,12 @@ spring:
 #      oss:
 #        endpoint: *********
 #        bucket: *******
+#      sms:
+#        host: http://dingxintz.market.alicloudapi.com
+#        path: /dx/notifySms
+#        method: POST
+#        appcode: 你自己的AppCode
+#        tplId: 你自己的模板Id
+
 server:
   port: 20001
