@@ -40,7 +40,7 @@ public class LoginController {
         String redisCode = stringRedisTemplate.opsForValue().get(AuthServerConstant.SMS_CODE_CACHE_PREFIX + phone);
         if(!StringUtils.isEmpty(redisCode)){
             long l = Long.parseLong(redisCode.split("_")[1]);
-            if(System.currentTimeMillis() - 1 < 60000){
+            if(System.currentTimeMillis() - l < 60000){
                 // 60秒内不能再发
                 return R.error(BizCodeEnum.SMS_CODE_EXCEPTION.getCode(), BizCodeEnum.SMS_CODE_EXCEPTION.getMsg());
             }
@@ -50,7 +50,7 @@ public class LoginController {
         String code = UUID.randomUUID().toString().substring(0, 5)+"_"+System.currentTimeMillis();
         // redis缓存验证码
         stringRedisTemplate.opsForValue().set(AuthServerConstant.SMS_CODE_CACHE_PREFIX + phone, code,3, TimeUnit.MINUTES);
-        thirdPartService.sendCode(phone,code);
+        thirdPartService.sendCode(phone,code.split("_")[0]);
         return R.ok();
     }
 }
