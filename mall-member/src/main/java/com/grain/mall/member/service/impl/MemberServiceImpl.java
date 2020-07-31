@@ -6,6 +6,7 @@ import com.grain.mall.member.exception.MobileExistException;
 import com.grain.mall.member.exception.UserNameExistException;
 import com.grain.mall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -51,7 +52,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         memberEntity.setUsername(vo.getUserNum());
 
         // 密码要进行加密存储
-        memberEntity.setPassword("");
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberEntity.setPassword(passwordEncoder.encode(vo.getPassword()));
 
         this.baseMapper.insert(memberEntity);
     }
