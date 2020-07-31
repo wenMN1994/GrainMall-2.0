@@ -8,7 +8,6 @@ import com.grain.mall.auth.vo.UserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -71,11 +70,35 @@ public class LoginController {
             Map<String, String> errors = result.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
             redirectAttributes.addFlashAttribute("errors", errors);
+            // 校验出错转发到注册页
             return "redirect:http://auth.grainmall.com/register.html";
         }
 
+        // 1、校验验证码
+        String code = vo.getCode();
+        String s = stringRedisTemplate.opsForValue().get(AuthServerConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
+        if(StringUtils.isEmpty(s)){
+            Map<String, String> errors = new HashMap<>();
+            errors.put("code", "验证码错误");
+            redirectAttributes.addFlashAttribute("errors", errors);
+            // 校验出错转发到注册页
+            return "redirect:http://auth.grainmall.com/register.html";
+        }else{
+            if(code.equals(s.split("_")[0])){
+                // 删除redis中的验证码
+                stringRedisTemplate.delete(AuthServerConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
+                // 验证码正确。注册，调用远程服务
 
+            }else {
+                Map<String, String> errors = new HashMap<>();
+                errors.put("code", "验证码错误");
+                redirectAttributes.addFlashAttribute("errors", errors);
+                // 校验出错转发到注册页
+                return "redirect:http://auth.grainmall.com/register.html";
+            }
+        }
 
+        // 注册成功返回首页，回到登录页
         return "redirect:/login.html";
     }
 }
