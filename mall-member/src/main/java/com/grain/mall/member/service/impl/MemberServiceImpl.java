@@ -2,7 +2,7 @@ package com.grain.mall.member.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.grain.common.to.login.SocialUserVo;
+import com.grain.common.vo.SocialUserVo;
 import com.grain.common.utils.HttpUtils;
 import com.grain.mall.member.dao.MemberLevelDao;
 import com.grain.mall.member.entity.MemberLevelEntity;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;

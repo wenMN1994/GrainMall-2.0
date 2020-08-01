@@ -1,7 +1,7 @@
 package com.grain.mall.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.grain.common.to.login.SocialUserVo;
+import com.grain.common.vo.SocialUserVo;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.member.entity.MemberEntity;
 import com.grain.mall.member.exception.MemberNotExistException;

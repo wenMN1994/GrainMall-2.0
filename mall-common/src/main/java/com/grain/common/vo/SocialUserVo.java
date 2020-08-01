@@ -1,4 +1,4 @@
-package com.grain.common.to.login;
+package com.grain.common.vo;
 
 import lombok.Data;
 

@@ -3,10 +3,10 @@ package com.grain.mall.auth.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.grain.common.utils.HttpUtils;
-import com.grain.common.to.login.SocialUserVo;
+import com.grain.common.vo.SocialUserVo;
 import com.grain.common.utils.R;
 import com.grain.mall.auth.feign.MemberFeignService;
-import com.grain.mall.auth.vo.MemberRespVo;
+import com.grain.common.vo.MemberRespVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class OAuth2Controller {
     MemberFeignService memberFeignService;
 
     @GetMapping("/oauth2.0/weibo/success")
-    public String weibo(@RequestParam("code") String code) throws Exception {
+    public String weibo(@RequestParam("code") String code, HttpSession session) throws Exception {
 
         Map<String,String> map = new HashMap<>();
         map.put("client_id", clientId);
@@ -65,6 +66,7 @@ public class OAuth2Controller {
                 MemberRespVo data = oauthLogin.getData("data", new TypeReference<MemberRespVo>() {
                 });
                 log.info("登陆成功：用户信息-->{}",data.toString());
+                session.setAttribute("loginUser", data);
                 return "redirect:http://grainmall.com";
             }else {
                 return "redirect:http://auth.grainmall.com/login.html";

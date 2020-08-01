@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.grain.common.exception.BizCodeEnum;
-import com.grain.common.to.login.SocialUserVo;
+import com.grain.common.vo.SocialUserVo;
 import com.grain.mall.member.exception.MemberNotExistException;
 import com.grain.mall.member.exception.MobileExistException;
 import com.grain.mall.member.exception.PasswordErrorException;
