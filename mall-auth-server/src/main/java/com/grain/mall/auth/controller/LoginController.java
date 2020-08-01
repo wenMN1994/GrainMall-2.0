@@ -1,9 +1,11 @@
 package com.grain.mall.auth.controller;
 
+import com.alibaba.fastjson.TypeReference;
 import com.grain.common.constant.AuthServerConstant;
 import com.grain.common.exception.BizCodeEnum;
 import com.grain.common.utils.R;
-import com.grain.mall.auth.feign.ThirdPartService;
+import com.grain.mall.auth.feign.MemberFeignService;
+import com.grain.mall.auth.feign.ThirdPartFeignService;
 import com.grain.mall.auth.vo.UserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -36,7 +38,10 @@ import java.util.stream.Collectors;
 public class LoginController {
 
     @Autowired
-    ThirdPartService thirdPartService;
+    ThirdPartFeignService thirdPartFeignService;
+
+    @Autowired
+    MemberFeignService memberFeignService;
 
     @Autowired
     StringRedisTemplate stringRedisTemplate;
@@ -56,10 +61,11 @@ public class LoginController {
         }
 
         // 2、验证码的再次验证 redis
-        String code = UUID.randomUUID().toString().substring(0, 5)+"_"+System.currentTimeMillis();
+        String code = UUID.randomUUID().toString().substring(0, 5);
+        String substring = code+"_"+System.currentTimeMillis();
         // redis缓存验证码
-        stringRedisTemplate.opsForValue().set(AuthServerConstant.SMS_CODE_CACHE_PREFIX + phone, code,3, TimeUnit.MINUTES);
-        thirdPartService.sendCode(phone,code.split("_")[0]);
+        stringRedisTemplate.opsForValue().set(AuthServerConstant.SMS_CODE_CACHE_PREFIX + phone, substring,3, TimeUnit.MINUTES);
+        thirdPartFeignService.sendCode(phone,code);
         return R.ok();
     }
 
@@ -88,7 +94,17 @@ public class LoginController {
                 // 删除redis中的验证码
                 stringRedisTemplate.delete(AuthServerConstant.SMS_CODE_CACHE_PREFIX + vo.getPhone());
                 // 验证码正确。注册，调用远程服务
-
+                R r = memberFeignService.register(vo);
+                if(r.getCode() == 0){
+                    // 注册成功返回首页，回到登录页
+                    return "redirect:http://auth.grainmall.com/login.html";
+                } else {
+                    // 失败
+                    Map<String, String> errors = new HashMap<>();
+                    errors.put("msg", r.getData(new TypeReference<String>(){}));
+                    redirectAttributes.addFlashAttribute("errors", errors);
+                    return "redirect:http://auth.grainmall.com/register.html";
+                }
             }else {
                 Map<String, String> errors = new HashMap<>();
                 errors.put("code", "验证码错误");
@@ -97,8 +113,5 @@ public class LoginController {
                 return "redirect:http://auth.grainmall.com/register.html";
             }
         }
-
-        // 注册成功返回首页，回到登录页
-        return "redirect:/login.html";
     }
 }

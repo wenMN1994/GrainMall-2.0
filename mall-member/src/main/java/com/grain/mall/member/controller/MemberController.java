@@ -3,6 +3,9 @@ package com.grain.mall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.grain.common.exception.BizCodeEnum;
+import com.grain.mall.member.exception.MobileExistException;
+import com.grain.mall.member.exception.UserNameExistException;
 import com.grain.mall.member.feign.CouponFeignService;
 import com.grain.mall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +47,10 @@ public class MemberController {
 
         try {
             memberService.register(vo);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (MobileExistException e) {
+            return R.error(BizCodeEnum.MOBILE_EXIST_EXCEPTION.getCode(), BizCodeEnum.MOBILE_EXIST_EXCEPTION.getMsg());
+        } catch (UserNameExistException e) {
+            return R.error(BizCodeEnum.USER_EXIST_EXCEPTION.getCode(), BizCodeEnum.USER_EXIST_EXCEPTION.getMsg());
         }
         return R.ok();
     }

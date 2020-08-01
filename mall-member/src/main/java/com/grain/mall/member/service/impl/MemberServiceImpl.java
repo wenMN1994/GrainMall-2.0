@@ -8,6 +8,8 @@ import com.grain.mall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -54,6 +56,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         // 密码要进行加密存储
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberEntity.setPassword(passwordEncoder.encode(vo.getPassword()));
+
+        memberEntity.setCreateTime(new Date());
 
         this.baseMapper.insert(memberEntity);
     }
