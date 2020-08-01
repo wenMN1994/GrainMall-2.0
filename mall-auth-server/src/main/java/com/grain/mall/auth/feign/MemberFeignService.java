@@ -1,5 +1,6 @@
 package com.grain.mall.auth.feign;
 
+import com.grain.common.to.login.SocialUserVo;
 import com.grain.common.utils.R;
 import com.grain.mall.auth.vo.UserLoginVo;
 import com.grain.mall.auth.vo.UserRegisterVo;
@@ -23,4 +24,7 @@ public interface MemberFeignService {
 
     @PostMapping("/member/member/login")
     public R login(@RequestBody UserLoginVo vo);
+
+    @PostMapping("member/member/oauth/login")
+    public R oauthLogin(@RequestBody SocialUserVo vo);
 }

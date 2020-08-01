@@ -1,6 +1,6 @@
 package com.grain.mall.thirdparty.component;
 
-import com.grain.mall.thirdparty.utils.HttpUtils;
+import com.grain.common.utils.HttpUtils;
 import lombok.Data;
 import org.apache.http.HttpResponse;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,6 +1,7 @@
 package com.grain.mall.member.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.grain.common.to.login.SocialUserVo;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.member.entity.MemberEntity;
 import com.grain.mall.member.exception.MemberNotExistException;
@@ -56,5 +57,12 @@ public interface MemberService extends IService<MemberEntity> {
      * @throws PasswordErrorException
      */
     MemberEntity cryptographicCheck(MemberLoginVo vo, MemberEntity memberEntity) throws PasswordErrorException;
+
+    /**
+     * 微博社交登录
+     * @param vo
+     * @return
+     */
+    MemberEntity login(SocialUserVo vo) throws Exception;
 }
 

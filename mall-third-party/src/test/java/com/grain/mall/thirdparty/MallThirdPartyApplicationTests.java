@@ -1,8 +1,8 @@
 package com.grain.mall.thirdparty;
 
 import com.aliyun.oss.OSSClient;
+import com.grain.common.utils.HttpUtils;
 import com.grain.mall.thirdparty.component.SmsComponent;
-import com.grain.mall.thirdparty.utils.HttpUtils;
 import org.apache.http.HttpResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;

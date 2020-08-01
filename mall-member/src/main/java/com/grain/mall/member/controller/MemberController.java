@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.grain.common.exception.BizCodeEnum;
+import com.grain.common.to.login.SocialUserVo;
 import com.grain.mall.member.exception.MemberNotExistException;
 import com.grain.mall.member.exception.MobileExistException;
 import com.grain.mall.member.exception.PasswordErrorException;
@@ -45,6 +46,16 @@ public class MemberController {
         return R.ok().put("member", memberEntity).put("coupons",memberCoupon.get("coupons"));
     }
 
+    @PostMapping("/oauth/login")
+    public R oauthLogin(@RequestBody SocialUserVo vo) throws Exception {
+        MemberEntity entity = memberService.login(vo);
+        if(entity != null){
+            return R.ok().setData(entity);
+        }else {
+            return R.error(BizCodeEnum.OAUTH2_LOGIN_EXCEPTION.getCode(), BizCodeEnum.OAUTH2_LOGIN_EXCEPTION.getMsg());
+        }
+    }
+
     @PostMapping("/login")
     public R login(@RequestBody MemberLoginVo vo){
 
@@ -57,7 +68,7 @@ public class MemberController {
             return R.error(BizCodeEnum.PASSWORD_ERROR_EXCEPTION.getCode(), BizCodeEnum.PASSWORD_ERROR_EXCEPTION.getMsg());
         }
 
-        return R.ok();
+        return R.ok().setData(memberEntity);
     }
 
     @PostMapping("/register")

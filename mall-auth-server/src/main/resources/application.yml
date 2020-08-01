@@ -1,0 +1,6 @@
+# 配置社交登录相关信息
+#social:
+#  weibo:
+#    app-key: 你的微博开发者中心提供的App Key
+#    app-secret: 你的微博开发者中心提供的App Secret
+#    redirect-uri: 你的微博开发者中心创建的应用的授权回调页

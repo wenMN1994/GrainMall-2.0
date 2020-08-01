@@ -29,7 +29,8 @@ public enum BizCodeEnum {
     USER_EXIST_EXCEPTION(15001,"用户名已被注册"),
     MOBILE_EXIST_EXCEPTION(15002,"手机号码已被注册"),
     USER_NOT_EXIST_EXCEPTION(15003,"用户不存在"),
-    PASSWORD_ERROR_EXCEPTION(15004,"密码错误");
+    PASSWORD_ERROR_EXCEPTION(15004,"密码错误"),
+    OAUTH2_LOGIN_EXCEPTION(15005, "社交登录失败");
 
     private int code;
     private String msg;
