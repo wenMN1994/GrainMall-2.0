@@ -6,6 +6,7 @@ import com.grain.common.exception.BizCodeEnum;
 import com.grain.common.utils.R;
 import com.grain.mall.auth.feign.MemberFeignService;
 import com.grain.mall.auth.feign.ThirdPartFeignService;
+import com.grain.mall.auth.vo.UserLoginVo;
 import com.grain.mall.auth.vo.UserRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -46,6 +47,11 @@ public class LoginController {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 验证码发送
+     * @param phone
+     * @return
+     */
     @ResponseBody
     @GetMapping("/sms/sendcode")
     public R sendCode(@RequestParam("phone") String phone){
@@ -69,7 +75,14 @@ public class LoginController {
         return R.ok();
     }
 
-    @PostMapping("register")
+    /**
+     * 会员注册
+     * @param vo
+     * @param result
+     * @param redirectAttributes
+     * @return
+     */
+    @PostMapping("/register")
     public String register(@Valid UserRegisterVo vo, BindingResult result, RedirectAttributes redirectAttributes){
 
         if(result.hasErrors()){
@@ -101,7 +114,7 @@ public class LoginController {
                 } else {
                     // 失败
                     Map<String, String> errors = new HashMap<>();
-                    errors.put("msg", r.getData(new TypeReference<String>(){}));
+                    errors.put("msg", r.getData("msg", new TypeReference<String>(){}));
                     redirectAttributes.addFlashAttribute("errors", errors);
                     return "redirect:http://auth.grainmall.com/register.html";
                 }
@@ -113,5 +126,24 @@ public class LoginController {
                 return "redirect:http://auth.grainmall.com/register.html";
             }
         }
+    }
+
+
+    @PostMapping("/login")
+    public String login(@Valid UserLoginVo vo, RedirectAttributes redirectAttributes){
+
+        // 调用远程服务登录
+        R login = memberFeignService.login(vo);
+        if(login.getCode() == 0){
+            // TODO 登录成功处理
+            return "redirect:http://grainmall.com";
+        } else {
+            // 登录失败
+            Map<String,String> errors = new HashMap<>();
+            errors.put("msg", login.getData("msg", new TypeReference<String>(){}));
+            redirectAttributes.addFlashAttribute("errors", errors);
+            return "redirect:http://auth.grainmall.com/login.html";
+        }
+
     }
 }

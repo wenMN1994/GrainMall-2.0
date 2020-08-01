@@ -3,8 +3,11 @@ package com.grain.mall.member.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.member.entity.MemberEntity;
+import com.grain.mall.member.exception.MemberNotExistException;
 import com.grain.mall.member.exception.MobileExistException;
+import com.grain.mall.member.exception.PasswordErrorException;
 import com.grain.mall.member.exception.UserNameExistException;
+import com.grain.mall.member.vo.MemberLoginVo;
 import com.grain.mall.member.vo.MemberRegisterVo;
 
 import java.util.Map;
@@ -37,5 +40,21 @@ public interface MemberService extends IService<MemberEntity> {
      * @param mobile
      */
     void checkMobileUnique(String mobile) throws MobileExistException;
+
+    /**
+     * 登录
+     * @param vo
+     * @return
+     */
+    MemberEntity login(MemberLoginVo vo) throws MemberNotExistException;
+
+    /**
+     * 密码校验
+     * @param vo
+     * @param memberEntity
+     * @return
+     * @throws PasswordErrorException
+     */
+    MemberEntity cryptographicCheck(MemberLoginVo vo, MemberEntity memberEntity) throws PasswordErrorException;
 }
 

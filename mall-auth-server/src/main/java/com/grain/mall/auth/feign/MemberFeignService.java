@@ -1,6 +1,7 @@
 package com.grain.mall.auth.feign;
 
 import com.grain.common.utils.R;
+import com.grain.mall.auth.vo.UserLoginVo;
 import com.grain.mall.auth.vo.UserRegisterVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,4 +20,7 @@ public interface MemberFeignService {
 
     @PostMapping("/member/member/register")
     public R register(@RequestBody UserRegisterVo vo);
+
+    @PostMapping("/member/member/login")
+    public R login(@RequestBody UserLoginVo vo);
 }

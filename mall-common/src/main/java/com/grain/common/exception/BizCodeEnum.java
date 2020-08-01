@@ -27,7 +27,9 @@ public enum BizCodeEnum {
     SMS_CODE_EXCEPTION(10002,"短信验证码频率太高，稍后再试"),
     PRODUCT_UP_EXCEPTION(11000, "商品上架异常"),
     USER_EXIST_EXCEPTION(15001,"用户名已被注册"),
-    MOBILE_EXIST_EXCEPTION(15002,"手机号码已被注册");
+    MOBILE_EXIST_EXCEPTION(15002,"手机号码已被注册"),
+    USER_NOT_EXIST_EXCEPTION(15003,"用户不存在"),
+    PASSWORD_ERROR_EXCEPTION(15004,"密码错误");
 
     private int code;
     private String msg;

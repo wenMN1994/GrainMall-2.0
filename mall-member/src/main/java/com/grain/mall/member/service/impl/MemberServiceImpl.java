@@ -2,8 +2,11 @@ package com.grain.mall.member.service.impl;
 
 import com.grain.mall.member.dao.MemberLevelDao;
 import com.grain.mall.member.entity.MemberLevelEntity;
+import com.grain.mall.member.exception.MemberNotExistException;
 import com.grain.mall.member.exception.MobileExistException;
+import com.grain.mall.member.exception.PasswordErrorException;
 import com.grain.mall.member.exception.UserNameExistException;
+import com.grain.mall.member.vo.MemberLoginVo;
 import com.grain.mall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -77,6 +80,38 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         Integer count = this.baseMapper.selectCount(new QueryWrapper<MemberEntity>().eq("mobile", mobile));
         if(count > 0){
             throw new MobileExistException();
+        }
+    }
+
+    @Override
+    public MemberEntity login(MemberLoginVo vo) throws MemberNotExistException {
+
+        // 去数据库查询 SELECT * FROM `ums_member` WHERE username=? OR mobile=?
+        MemberEntity memberEntity = this.baseMapper.selectOne(new QueryWrapper<MemberEntity>()
+                .eq("username", vo.getLoginAccount())
+                .or()
+                .eq("mobile", vo.getLoginAccount()));
+
+        if(memberEntity == null){
+            // 用户不存在，登录失败
+            throw new MemberNotExistException();
+        } else {
+            return cryptographicCheck(vo, memberEntity);
+        }
+    }
+
+    @Override
+    public MemberEntity cryptographicCheck(MemberLoginVo vo, MemberEntity memberEntity) throws PasswordErrorException {
+        // 获取到数据库的password
+        String passwordDb = memberEntity.getPassword();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        // 密码匹配
+        boolean matches = passwordEncoder.matches(vo.getPassword(), passwordDb);
+        if(matches){
+            return memberEntity;
+        }else {
+            // 密码错误，登录失败
+            throw new PasswordErrorException();
         }
     }
 

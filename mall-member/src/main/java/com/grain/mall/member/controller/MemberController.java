@@ -4,9 +4,12 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.grain.common.exception.BizCodeEnum;
+import com.grain.mall.member.exception.MemberNotExistException;
 import com.grain.mall.member.exception.MobileExistException;
+import com.grain.mall.member.exception.PasswordErrorException;
 import com.grain.mall.member.exception.UserNameExistException;
 import com.grain.mall.member.feign.CouponFeignService;
+import com.grain.mall.member.vo.MemberLoginVo;
 import com.grain.mall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,21 @@ public class MemberController {
         memberEntity.setNickname("张三");
         R memberCoupon = couponFeignService.memberCoupon();
         return R.ok().put("member", memberEntity).put("coupons",memberCoupon.get("coupons"));
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo vo){
+
+        MemberEntity memberEntity = null;
+        try {
+            memberEntity = memberService.login(vo);
+        } catch (MemberNotExistException e) {
+            return R.error(BizCodeEnum.USER_NOT_EXIST_EXCEPTION.getCode(), BizCodeEnum.USER_NOT_EXIST_EXCEPTION.getMsg());
+        } catch (PasswordErrorException e) {
+            return R.error(BizCodeEnum.PASSWORD_ERROR_EXCEPTION.getCode(), BizCodeEnum.PASSWORD_ERROR_EXCEPTION.getMsg());
+        }
+
+        return R.ok();
     }
 
     @PostMapping("/register")
