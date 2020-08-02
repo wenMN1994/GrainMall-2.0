@@ -95,10 +95,10 @@
   					</b>
         <ul>
           <li>
-            <a href="http://auth.grainmall.com/login.html">你好，[[${session.loginUser==null?'请登录':session.loginUser.nickname}]]</a>
+            <a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'javascript:void(0);'}">你好，[[${session.loginUser==null?'请登录':session.loginUser.nickname}]]</a>
           </li>
           <li>
-            <a href="http://auth.grainmall.com/register.html" class="li_2">免费注册</a>
+            <a th:if="${session.loginUser==null}" href="http://auth.grainmall.com/register.html" class="li_2">免费注册</a>
           </li>
           <span>|</span>
           <li>

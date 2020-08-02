@@ -2,6 +2,7 @@ package com.grain.mall.auth.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.grain.common.constant.AuthServerConstant;
 import com.grain.common.utils.HttpUtils;
 import com.grain.common.vo.SocialUserVo;
 import com.grain.common.utils.R;
@@ -66,7 +67,7 @@ public class OAuth2Controller {
                 MemberRespVo data = oauthLogin.getData("data", new TypeReference<MemberRespVo>() {
                 });
                 log.info("登陆成功：用户信息-->{}",data.toString());
-                session.setAttribute("loginUser", data);
+                session.setAttribute(AuthServerConstant.LOGIN_USER, data);
                 return "redirect:http://grainmall.com";
             }else {
                 return "redirect:http://auth.grainmall.com/login.html";

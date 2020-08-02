@@ -4,6 +4,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.grain.common.constant.AuthServerConstant;
 import com.grain.common.exception.BizCodeEnum;
 import com.grain.common.utils.R;
+import com.grain.common.vo.MemberRespVo;
 import com.grain.mall.auth.feign.MemberFeignService;
 import com.grain.mall.auth.feign.ThirdPartFeignService;
 import com.grain.mall.auth.vo.UserLoginVo;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -128,14 +130,27 @@ public class LoginController {
         }
     }
 
+    @GetMapping("/login.html")
+    public String loginPage(HttpSession session){
+        Object sessionAttribute = session.getAttribute(AuthServerConstant.LOGIN_USER);
+        if(sessionAttribute == null){
+            //没登录跳转登录页
+            return "login";
+        }else {
+            return "redirect:http://grainmall.com";
+        }
+    }
 
     @PostMapping("/login")
-    public String login(@Valid UserLoginVo vo, RedirectAttributes redirectAttributes){
+    public String login(@Valid UserLoginVo vo, RedirectAttributes redirectAttributes, HttpSession session){
 
         // 调用远程服务登录
         R login = memberFeignService.login(vo);
         if(login.getCode() == 0){
-            // TODO 登录成功处理
+            // 登录成功处理
+            MemberRespVo data = login.getData("data", new TypeReference<MemberRespVo>() {
+            });
+            session.setAttribute(AuthServerConstant.LOGIN_USER, data);
             return "redirect:http://grainmall.com";
         } else {
             // 登录失败

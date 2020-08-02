@@ -28,7 +28,7 @@ public class MallWebConfig implements WebMvcConfigurer {
          *             return "login";
          *         }
          */
-        registry.addViewController("/login.html").setViewName("login");
+//        registry.addViewController("/login.html").setViewName("login");
 
         /**
          *     @GetMapping("/register.html")
