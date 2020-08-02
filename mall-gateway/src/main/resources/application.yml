@@ -60,4 +60,8 @@ spring:
           predicates:
             - Host=auth.grainmall.com
 
+        - id: grain_mall_cart_route
+          uri: lb://mall-cart
+          predicates:
+            - Host=cart.grainmall.com
 # 前端项目 /api
