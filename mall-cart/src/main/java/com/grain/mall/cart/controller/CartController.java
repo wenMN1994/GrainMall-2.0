@@ -34,4 +34,14 @@ public class CartController {
         System.out.println(userInfoTo);
         return "cartList";
     }
+
+    /**
+     * 添加商品到购物车
+     * @return
+     */
+    @GetMapping("/addToCart")
+    public String addToCart(){
+
+        return "success";
+    }
 }
