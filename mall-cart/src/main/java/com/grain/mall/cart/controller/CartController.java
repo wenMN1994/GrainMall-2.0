@@ -1,9 +1,16 @@
 package com.grain.mall.cart.controller;
 
 import com.grain.mall.cart.interceptor.CartInterceptor;
+import com.grain.mall.cart.service.CartService;
 import com.grain.mall.cart.to.UserInfoTo;
+import com.grain.mall.cart.vo.CartItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author：Dragon Wen
@@ -15,6 +22,9 @@ import org.springframework.web.bind.annotation.GetMapping;
  */
 @Controller
 public class CartController {
+
+    @Autowired
+    CartService cartService;
 
     /**
      * 浏览器有一个cookie；user-key；标识用户身份，一个月后过期；
@@ -40,8 +50,13 @@ public class CartController {
      * @return
      */
     @GetMapping("/addToCart")
-    public String addToCart(){
+    public String addToCart(@RequestParam("skuId") Long skuId,
+                            @RequestParam("num") Integer num,
+                            Model model) throws ExecutionException, InterruptedException {
 
+        CartItem cartItem = cartService.addToCat(skuId, num);
+
+        model.addAttribute("item", cartItem);
         return "success";
     }
 }

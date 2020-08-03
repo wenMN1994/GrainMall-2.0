@@ -1,5 +1,9 @@
 package com.grain.mall.cart.service;
 
+import com.grain.mall.cart.vo.CartItem;
+
+import java.util.concurrent.ExecutionException;
+
 /**
  * @author：Dragon Wen
  * @email：18475536452@163.com
@@ -9,4 +13,12 @@ package com.grain.mall.cart.service;
  * @version: $
  */
 public interface CartService {
+
+    /**
+     * 添加商品到购物车
+     * @param skuId
+     * @param num
+     * @return
+     */
+    CartItem addToCat(Long skuId, Integer num) throws ExecutionException, InterruptedException;
 }
