@@ -3,6 +3,7 @@ package com.grain.mall.cart.controller;
 import com.grain.mall.cart.interceptor.CartInterceptor;
 import com.grain.mall.cart.service.CartService;
 import com.grain.mall.cart.to.UserInfoTo;
+import com.grain.mall.cart.vo.Cart;
 import com.grain.mall.cart.vo.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,11 +39,10 @@ public class CartController {
      * @return
      */
     @GetMapping("/cart.html")
-    public String cartListString(){
+    public String cartListString(Model model) throws ExecutionException, InterruptedException {
 
-        // 1、快速得到用户信息，id，user-key
-        UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
-        System.out.println(userInfoTo);
+        Cart cart = cartService.getCart();
+        model.addAttribute("cartInfo", cart);
         return "cartList";
     }
 

@@ -13,7 +13,6 @@ import java.util.List;
  * @modified By：
  * @version: $
  */
-@Data
 public class Cart {
 
     List<CartItem> items;

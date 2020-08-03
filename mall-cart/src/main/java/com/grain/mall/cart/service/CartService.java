@@ -1,5 +1,6 @@
 package com.grain.mall.cart.service;
 
+import com.grain.mall.cart.vo.Cart;
 import com.grain.mall.cart.vo.CartItem;
 
 import java.util.concurrent.ExecutionException;
@@ -28,4 +29,16 @@ public interface CartService {
      * @return
      */
     CartItem getCartItem(Long skuId);
+
+    /**
+     * 获取整个购物车
+     * @return
+     */
+    Cart getCart() throws ExecutionException, InterruptedException;
+
+    /**
+     * 清除购物车
+     * @param cartKey
+     */
+    void clearCart(String cartKey);
 }
