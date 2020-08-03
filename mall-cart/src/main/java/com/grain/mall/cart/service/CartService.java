@@ -21,4 +21,11 @@ public interface CartService {
      * @return
      */
     CartItem addToCat(Long skuId, Integer num) throws ExecutionException, InterruptedException;
+
+    /**
+     * 根据skuId查询购物车中购物项
+     * @param skuId
+     * @return
+     */
+    CartItem getCartItem(Long skuId);
 }

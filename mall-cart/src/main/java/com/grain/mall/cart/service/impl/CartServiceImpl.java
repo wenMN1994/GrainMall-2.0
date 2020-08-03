@@ -48,8 +48,6 @@ public class CartServiceImpl implements CartService {
     public CartItem addToCat(Long skuId, Integer num) throws ExecutionException, InterruptedException {
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
 
-
-
         String res = (String) cartOps.get(skuId.toString());
         if(StringUtils.isEmpty(res)){
             // 购物车无此商品
@@ -84,6 +82,14 @@ public class CartServiceImpl implements CartService {
             cartOps.put(skuId.toString(), JSON.toJSONString(cartItem));
             return cartItem;
         }
+    }
+
+    @Override
+    public CartItem getCartItem(Long skuId) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        String res = (String) cartOps.get(skuId.toString());
+        CartItem cartItem = JSON.parseObject(res, CartItem.class);
+        return cartItem;
     }
 
     /**
