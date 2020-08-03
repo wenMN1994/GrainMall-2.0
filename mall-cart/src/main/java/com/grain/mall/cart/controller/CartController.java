@@ -74,4 +74,10 @@ public class CartController {
         model.addAttribute("item", cartItem);
         return "success";
     }
+
+    @GetMapping("/checkItem")
+    public String checkItem(@RequestParam("skuId") Long skuId, @RequestParam("check") Integer check){
+        cartService.checkItem(skuId, check);
+        return "redirect:http://cart.grainmall.com/cart.html";
+    }
 }

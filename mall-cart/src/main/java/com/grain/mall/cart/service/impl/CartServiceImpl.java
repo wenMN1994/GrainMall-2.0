@@ -1,6 +1,7 @@
 package com.grain.mall.cart.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.grain.common.utils.R;
 import com.grain.mall.cart.feign.ProductFeginService;
@@ -129,6 +130,15 @@ public class CartServiceImpl implements CartService {
     @Override
     public void clearCart(String cartKey) {
         stringRedisTemplate.delete(cartKey);
+    }
+
+    @Override
+    public void checkItem(Long skuId, Integer check) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        CartItem cartItem = getCartItem(skuId);
+        cartItem.setCheck(check==1?true:false);
+        String s = JSON.toJSONString(cartItem);
+        cartOps.put(skuId.toString(), s);
     }
 
     private List<CartItem> getCartItems(String cartKey) {
