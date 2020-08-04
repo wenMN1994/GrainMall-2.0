@@ -80,4 +80,10 @@ public class CartController {
         cartService.checkItem(skuId, check);
         return "redirect:http://cart.grainmall.com/cart.html";
     }
+
+    @GetMapping("/countItem")
+    public String countItem(@RequestParam("skuId") Long skuId, @RequestParam("num") Integer num){
+        cartService.changeItemCount(skuId, num);
+        return "redirect:http://cart.grainmall.com/cart.html";
+    }
 }

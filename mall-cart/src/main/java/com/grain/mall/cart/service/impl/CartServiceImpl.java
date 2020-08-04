@@ -137,8 +137,15 @@ public class CartServiceImpl implements CartService {
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
         CartItem cartItem = getCartItem(skuId);
         cartItem.setCheck(check==1?true:false);
-        String s = JSON.toJSONString(cartItem);
-        cartOps.put(skuId.toString(), s);
+        cartOps.put(skuId.toString(), JSON.toJSONString(cartItem));
+    }
+
+    @Override
+    public void changeItemCount(Long skuId, Integer num) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        CartItem cartItem = getCartItem(skuId);
+        cartItem.setCount(num);
+        cartOps.put(skuId.toString(), JSON.toJSONString(cartItem));
     }
 
     private List<CartItem> getCartItems(String cartKey) {
