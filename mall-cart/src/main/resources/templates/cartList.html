@@ -115,7 +115,7 @@
                             </li>
                             <li style="font-weight:bold"><p class="zj">￥[[${#numbers.formatDecimal(item.totalPrice, 1, 2)}]]</p></li>
                             <li>
-                                <p>删除</p>
+                                <p class="deleteItemBtn" th:attr="skuId=${item.skuId}">删除</p>
 
                             </li>
                         </ol>
@@ -130,7 +130,7 @@
                     <li><input type="checkbox" class="allCheck"><span>全选</span></li>
                     <li>删除选中的商品</li>
                     <li>移到我的关注</li>
-                    <li>清除下柜商品</li>
+                    <li>清除下架商品</li>
                 </ul>
             </div>
             <div>
@@ -168,7 +168,7 @@
         </dl>
     </div>
     <div>
-        <button type="button">删除</button>
+        <button type="button" onclick="deleteItem()">删除</button>
 
     </div>
 </div>
@@ -773,6 +773,14 @@
         var skuId = $(this).parent().attr("skuId");
         var num = $(this).parent().find(".countOpsNum").text();
         location.href = "http://cart.grainmall.com/countItem?skuId="+skuId+"&num="+num;
+    });
+
+    var deleteId = 0;
+    function deleteItem(){
+        location.href = "http://cart.grainmall.com/deleteItem?skuId="+deleteId
+    }
+    $(".deleteItemBtn").click(function () {
+        deleteId = $(this).attr("skuId");
     });
 </script>
 </html>

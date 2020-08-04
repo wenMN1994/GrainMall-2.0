@@ -148,6 +148,12 @@ public class CartServiceImpl implements CartService {
         cartOps.put(skuId.toString(), JSON.toJSONString(cartItem));
     }
 
+    @Override
+    public void deleteItem(Long skuId) {
+        BoundHashOperations<String, Object, Object> cartOps = getCartOps();
+        cartOps.delete(skuId.toString());
+    }
+
     private List<CartItem> getCartItems(String cartKey) {
         BoundHashOperations<String, Object, Object> hashOperations = stringRedisTemplate.boundHashOps(cartKey);
         List<Object> values = hashOperations.values();
