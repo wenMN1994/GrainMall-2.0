@@ -685,6 +685,10 @@ html {
 		top: 0;
 		background: url(../image/search.ele.png) no-repeat 7px -140px;
 	}
+	.crumb-select-item a {
+        color: #666;
+		text-decoration: none;
+    }
 
 .JD_banner {
   margin-top: 15px;
