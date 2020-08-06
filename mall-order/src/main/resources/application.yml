@@ -11,6 +11,9 @@ spring:
   application:
     name: mall-order
 
+  thymeleaf:
+    cache: false
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
