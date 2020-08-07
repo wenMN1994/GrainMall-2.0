@@ -131,13 +131,15 @@
 						</li>
 					</ul>
 					<ul class="header_ul_right">
-						<li style="border: 0;">
-							<a href="denglu.html" class="aa">你好，请登录</a>
+						<li style="width: 130px;">
+							<a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'javascript:void(0);'}">你好，[[${session.loginUser==null?'请登录':session.loginUser.nickname}]]&nbsp;&nbsp;|</a>
+						</li>
+						<li th:if="${session.loginUser==null}">
+							<a  href="http://auth.grainmall.com/register.html" class="li_2">免费注册&nbsp;&nbsp;|</a>
 						</li>
 						<li>
-							<a href="javascript:;" style="color: red;">免费注册</a> |</li>
-						<li>
-							<a href="javascript:;" class="aa">我的订单</a> |</li>
+							<a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'http://order.grainmall.com/list.html'}">我的订单&nbsp;&nbsp;|</a>
+						</li>
 						<li class="jingdong" style="width:95px;">
 							<a href="javascript:;">我的谷粒商城</a><span class="glyphicon glyphicon-menu-down">|</span>
 							<ol class="jingdong_ol">

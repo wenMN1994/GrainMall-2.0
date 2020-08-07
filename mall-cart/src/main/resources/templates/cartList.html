@@ -28,7 +28,9 @@
                 </li>
                 <li><a th:if="${session.loginUser==null}" href="http://auth.grainmall.com/register.html" class="li_2">免费注册</a></li>
                 <li class="spacer"></li>
-                <li><a href="">我的订单</a></li>
+                <li>
+                    <a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'http://order.grainmall.com/list.html'}">我的订单</a>
+                </li>
                 <li class="spacer"></li>
 
             </ul>
