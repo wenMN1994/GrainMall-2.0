@@ -1,10 +1,9 @@
 package com.grain.mall.cart.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.grain.common.utils.R;
-import com.grain.mall.cart.feign.ProductFeginService;
+import com.grain.mall.cart.feign.ProductFeignService;
 import com.grain.mall.cart.interceptor.CartInterceptor;
 import com.grain.mall.cart.service.CartService;
 import com.grain.mall.cart.to.UserInfoTo;
@@ -18,6 +17,7 @@ import org.springframework.data.redis.core.BoundHashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -42,7 +42,7 @@ public class CartServiceImpl implements CartService {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    ProductFeginService productFeginService;
+    ProductFeignService productFeignService;
 
     @Autowired
     ThreadPoolExecutor threadPoolExecutor;
@@ -57,7 +57,7 @@ public class CartServiceImpl implements CartService {
             CartItem cartItem = new CartItem();
             // 远程查询当前要添加的商品信息
             CompletableFuture<Void> getSkuInfoTask = CompletableFuture.runAsync(() -> {
-                R skuInfo = productFeginService.getSkuInfo(skuId);
+                R skuInfo = productFeignService.getSkuInfo(skuId);
                 SkuInfoVo data = skuInfo.getData("skuInfo", new TypeReference<SkuInfoVo>() {
                 });
                 cartItem.setSkuId(skuId);
@@ -70,7 +70,7 @@ public class CartServiceImpl implements CartService {
 
             // 远程查询sku的组合信息
             CompletableFuture<Void> getSkuSaleAttrValues = CompletableFuture.runAsync(() -> {
-                List<String> skuSaleAttrValues = productFeginService.getSkuSaleAttrValues(skuId);
+                List<String> skuSaleAttrValues = productFeignService.getSkuSaleAttrValues(skuId);
                 cartItem.setSkuAttr(skuSaleAttrValues);
             }, threadPoolExecutor);
 
@@ -152,6 +152,29 @@ public class CartServiceImpl implements CartService {
     public void deleteItem(Long skuId) {
         BoundHashOperations<String, Object, Object> cartOps = getCartOps();
         cartOps.delete(skuId.toString());
+    }
+
+    @Override
+    public List<CartItem> getUserCartItems() {
+        UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
+        if(userInfoTo == null){
+            return null;
+        }else {
+            String cartKey = CART_PREFIX + userInfoTo.getUserId();
+            List<CartItem> cartItems = getCartItems(cartKey);
+            // 获取所有被选中的购物项
+            List<CartItem> items = cartItems.stream()
+                    .filter(item -> item.getCheck())
+                    .map(item->{
+                        // 更新为最新价格
+                        R price = productFeignService.getPrice(item.getSkuId());
+                        String data = price.getData("data", new TypeReference<String>(){});
+                        item.setPrice(new BigDecimal(data));
+                        return item;
+                    })
+                    .collect(Collectors.toList());
+            return items;
+        }
     }
 
     private List<CartItem> getCartItems(String cartKey) {

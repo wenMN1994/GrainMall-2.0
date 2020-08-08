@@ -3,6 +3,7 @@ package com.grain.mall.cart.service;
 import com.grain.mall.cart.vo.Cart;
 import com.grain.mall.cart.vo.CartItem;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -61,4 +62,10 @@ public interface CartService {
      * @param skuId
      */
     void deleteItem(Long skuId);
+
+    /**
+     *
+     * @return
+     */
+    List<CartItem> getUserCartItems();
 }

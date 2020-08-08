@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -27,6 +29,14 @@ public class CartController {
 
     @Autowired
     CartService cartService;
+
+    @GetMapping("/currentUserCartItems")
+    @ResponseBody
+    public List<CartItem> getCurrentUserCartItems(){
+        List<CartItem> cartItems = cartService.getUserCartItems();
+        return cartItems;
+    }
+
 
     /**
      * 浏览器有一个cookie；user-key；标识用户身份，一个月后过期；
