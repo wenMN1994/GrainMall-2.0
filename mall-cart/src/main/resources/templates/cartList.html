@@ -26,7 +26,8 @@
                 <li>
                     <a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'javascript:void(0);'}">你好，[[${session.loginUser==null?'请登录':session.loginUser.nickname}]]</a>
                 </li>
-                <li><a th:if="${session.loginUser==null}" href="http://auth.grainmall.com/register.html" class="li_2">免费注册</a></li>
+                <li><a th:if="${session.loginUser==null}" href="http://auth.grainmall.com/register.html" class="li_2">免费注册</a>
+                </li>
                 <li class="spacer"></li>
                 <li>
                     <a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'http://order.grainmall.com/list.html'}">我的订单</a>
@@ -56,170 +57,175 @@
             </div>
         </div>
         <div class="one_search_load" th:if="${session.loginUser==null}">
-        <div class="one_search_load">
-            <img src="/static/cart/img/shop_07.jpg" class="one_load_wraing">
-            <span>您还没有登录！登录后购物车的商品将保存到您账号中</span>
-            <a href="#"><input type="button" onclick="login()" value="立即登录" class="one_load_btn"></a>
+            <div class="one_search_load">
+                <img src="/static/cart/img/shop_07.jpg" class="one_load_wraing">
+                <span>您还没有登录！登录后购物车的商品将保存到您账号中</span>
+                <a href="#"><input type="button" onclick="login()" value="立即登录" class="one_load_btn"></a>
+            </div>
         </div>
     </div>
-</div>
-<div class="One_BdyShop">
-    <div class="OneBdy_box">
-        <div class="One_tabTop">
-            <div class="One_Topleft">
-                <span>全部商品 </span>
+    <div class="One_BdyShop">
+        <div class="OneBdy_box">
+            <div class="One_tabTop">
+                <div class="One_Topleft">
+                    <span>全部商品 </span>
+
+                </div>
 
             </div>
+            <div class="One_ShopTop">
+                <ul>
+                    <li><input type="checkbox" class="allCheck">全选</li>
+                    <li>商品</li>
+                    <li>单价</li>
+                    <li>数量</li>
+                    <li>小计</li>
+                    <li>操作</li>
+                </ul>
+            </div>
 
-        </div>
-        <div class="One_ShopTop">
-            <ul>
-                <li><input type="checkbox" class="allCheck">全选</li>
-                <li>商品</li>
-                <li>单价</li>
-                <li>数量</li>
-                <li>小计</li>
-                <li>操作</li>
-            </ul>
-        </div>
+            <div class="One_ShopCon">
+                <h1 th:if="${cartInfo.items == null}">购物车还没有商品，<a href="http://grainmall.com">去购物</a></h1>
+                <ul th:if="${cartInfo.items != null}">
+                    <li th:each="item:${cartInfo.items}">
+                        <div>
+                        </div>
+                        <div>
+                            <ol>
+                                <li><input type="checkbox" th:attr="skuId=${item.skuId}" class="itemCheck"
+                                           th:checked="${item.check}"></li>
+                                <li>
+                                    <dt><img th:src="${item.image}" alt=""></dt>
+                                    <dd style="width: 300px;">
+                                        <p>
+                                            <span th:text="${item.title}">TCL 55A950C 55英寸32核</span>
+                                            <br/>
+                                            <span th:each="attr:${item.skuAttr}">[[${attr}]]</span>
+                                        </p>
 
-        <div class="One_ShopCon">
-            <h1 th:if="${cartInfo.items == null}">购物车还没有商品，<a href="http://grainmall.com">去购物</a></h1>
-            <ul th:if="${cartInfo.items != null}">
-                <li th:each="item:${cartInfo.items}">
-                    <div>
-                    </div>
-                    <div>
-                        <ol>
-                            <li><input type="checkbox" th:attr="skuId=${item.skuId}" class="itemCheck" th:checked="${item.check}"></li>
-                            <li>
-                                <dt><img th:src="${item.image}" alt=""></dt>
-                                <dd style="width: 300px;">
-                                    <p>
-                                        <span th:text="${item.title}">TCL 55A950C 55英寸32核</span>
-                                        <br/>
-                                        <span th:each="attr:${item.skuAttr}">[[${attr}]]</span>
+                                    </dd>
+                                </li>
+                                <li>
+                                    <p class="dj" th:text="'￥' + ${#numbers.formatDecimal(item.price, 3,2)}">
+                                        ￥4599.00</p>
+
+                                </li>
+                                <li>
+                                    <p th:attr="skuId=${item.skuId}">
+                                        <span class="countOpsBtn">-</span>
+                                        <span class="countOpsNum" th:text="${item.count}">5</span>
+                                        <span class="countOpsBtn">+</span>
                                     </p>
 
-                                </dd>
-                            </li>
-                            <li>
-                                <p class="dj" th:text="'￥' + ${#numbers.formatDecimal(item.price, 3,2)}">￥4599.00</p>
+                                </li>
+                                <li style="font-weight:bold"><p class="zj">￥[[${#numbers.formatDecimal(item.totalPrice,
+                                    1, 2)}]]</p></li>
+                                <li>
+                                    <p class="deleteItemBtn" th:attr="skuId=${item.skuId}">删除</p>
 
-                            </li>
-                            <li>
-                                <p th:attr="skuId=${item.skuId}">
-                                    <span class="countOpsBtn">-</span>
-                                    <span class="countOpsNum" th:text="${item.count}">5</span>
-                                    <span class="countOpsBtn">+</span>
-                                </p>
+                                </li>
+                            </ol>
+                        </div>
+                    </li>
 
-                            </li>
-                            <li style="font-weight:bold"><p class="zj">￥[[${#numbers.formatDecimal(item.totalPrice, 1, 2)}]]</p></li>
-                            <li>
-                                <p class="deleteItemBtn" th:attr="skuId=${item.skuId}">删除</p>
-
-                            </li>
-                        </ol>
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-        <div class="One_ShopFootBuy fix1" th:if="${cartInfo != null}">
-            <div>
-                <ul>
-                    <li><input type="checkbox" class="allCheck"><span>全选</span></li>
-                    <li>删除选中的商品</li>
-                    <li>移到我的关注</li>
-                    <li>清除下架商品</li>
                 </ul>
             </div>
-            <div>
-                <font style="color:#e64346;font-weight:bold;" class="sumNum"> </font>&nbsp;
+            <div class="One_ShopFootBuy fix1" th:if="${cartInfo != null}">
+                <div>
+                    <ul>
+                        <li><input type="checkbox" class="allCheck"><span>全选</span></li>
+                        <li>删除选中的商品</li>
+                        <li>移到我的关注</li>
+                        <li>清除下架商品</li>
+                    </ul>
+                </div>
+                <div>
+                    <font style="color:#e64346;font-weight:bold;" class="sumNum"> </font>&nbsp;
 
-                <ul>
-                    <li><img src="/static/cart/img/buyNumleft.png" alt=""></li>
-                    <li><img src="/static/cart/img/buyNumright.png" alt=""></li>
-                </ul>
-            </div>
-            <div>
-                <ol>
-                    <li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt">￥[[${#numbers.formatDecimal(cartInfo.totalAmount, 1, 2)}]]</span></li>
-                    <li>优惠：<span>￥[[${#numbers.formatDecimal(cartInfo.reduce, 1, 2)}]]</span></li>
-                </ol>
-            </div>
-            <div>
-                <button onclick="toTrade()" type="button">去结算</button>
+                    <ul>
+                        <li><img src="/static/cart/img/buyNumleft.png" alt=""></li>
+                        <li><img src="/static/cart/img/buyNumright.png" alt=""></li>
+                    </ul>
+                </div>
+                <div>
+                    <ol>
+                        <li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt">￥[[${#numbers.formatDecimal(cartInfo.totalAmount, 1, 2)}]]</span>
+                        </li>
+                        <li>优惠：<span>￥[[${#numbers.formatDecimal(cartInfo.reduce, 1, 2)}]]</span></li>
+                    </ol>
+                </div>
+                <div>
+                    <button onclick="toTrade()" type="button">去结算</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="One_isDel">
-    <p>
-        <span>删除</span><span><img src="/static/cart/img/错误.png" alt=""></span>
-    </p>
-    <div>
+    <div class="One_isDel">
+        <p>
+            <span>删除</span><span><img src="/static/cart/img/错误.png" alt=""></span>
+        </p>
+        <div>
+            <dl>
+                <dt><img src="/static/cart/img/感叹三角形 (2).png" alt=""></dt>
+                <dd>
+                    <li>删除商品？</li>
+                    <li>您可以选择移到关注，或删除商品。</li>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <button type="button" onclick="deleteItem()">删除</button>
+
+        </div>
+    </div>
+    <div class="One_moveGzIfNull">
+        <p>
+            <span>删除</span><span><img src="/static/cart/img/错误.png" alt=""></span>
+        </p>
         <dl>
             <dt><img src="/static/cart/img/感叹三角形 (2).png" alt=""></dt>
-            <dd>
-                <li>删除商品？</li>
-                <li>您可以选择移到关注，或删除商品。</li>
-            </dd>
+            <dd>请至少选中一件商品！</dd>
         </dl>
     </div>
-    <div>
-        <button type="button" onclick="deleteItem()">删除</button>
-
+    <div class="One_moveMyGz">
+        <p>
+            <span>删除</span><span><img src="/static/cart/img/错误.png" alt=""></span>
+        </p>
+        <div>
+            <dl>
+                <dt><img src="/static/cart/img/感叹三角形 (2).png" alt=""></dt>
+                <dd>
+                    <li>移到关注</li>
+                    <li>移动后选中商品将不再购物车中显示</li>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <button type="button">确定</button>
+            <button type="button">取消</button>
+        </div>
     </div>
-</div>
-<div class="One_moveGzIfNull">
-    <p>
-        <span>删除</span><span><img src="/static/cart/img/错误.png" alt=""></span>
-    </p>
-    <dl>
-        <dt><img src="/static/cart/img/感叹三角形 (2).png" alt=""></dt>
-        <dd>请至少选中一件商品！</dd>
-    </dl>
-</div>
-<div class="One_moveMyGz">
-    <p>
-        <span>删除</span><span><img src="/static/cart/img/错误.png" alt=""></span>
-    </p>
-    <div>
+    <div class="One_clearShop">
+        <p>
+            <span>提示</span><span><img src="/static/cart/img/错误.png" alt=""></span>
+        </p>
         <dl>
             <dt><img src="/static/cart/img/感叹三角形 (2).png" alt=""></dt>
-            <dd>
-                <li>移到关注</li>
-                <li>移动后选中商品将不再购物车中显示</li>
-            </dd>
+            <dd>没有下柜商品!</dd>
         </dl>
     </div>
-    <div>
-        <button type="button">确定</button>
-        <button type="button">取消</button>
+    <!--底部-->
+
+    <div class="one_footer">
+
     </div>
-</div>
-<div class="One_clearShop">
-    <p>
-        <span>提示</span><span><img src="/static/cart/img/错误.png" alt=""></span>
-    </p>
-    <dl>
-        <dt><img src="/static/cart/img/感叹三角形 (2).png" alt=""></dt>
-        <dd>没有下柜商品!</dd>
-    </dl>
-</div>
-<!--底部-->
-
-<div class="one_footer">
-
 </div>
 </body>
 <script src="/static/cart/js/index.js" charset="utf-8"></script>
 <script type="text/javascript">
     function toTrade() {
-        window.location.href = "http://cart.gmall.com:8087/toTrade";
+        window.location.href = "http://order.grainmall.com/toTrade";
     }
 
     function toItem(skuId) {
@@ -768,19 +774,21 @@
     $(".itemCheck").click(function () {
         var skuId = $(this).attr("skuId");
         var check = $(this).prop("checked");
-        location.href = "http://cart.grainmall.com/checkItem?skuId="+skuId+"&check="+(check?1:0);
+        location.href = "http://cart.grainmall.com/checkItem?skuId=" + skuId + "&check=" + (check ? 1 : 0);
     });
 
     $(".countOpsBtn").click(function () {
         var skuId = $(this).parent().attr("skuId");
         var num = $(this).parent().find(".countOpsNum").text();
-        location.href = "http://cart.grainmall.com/countItem?skuId="+skuId+"&num="+num;
+        location.href = "http://cart.grainmall.com/countItem?skuId=" + skuId + "&num=" + num;
     });
 
     var deleteId = 0;
-    function deleteItem(){
-        location.href = "http://cart.grainmall.com/deleteItem?skuId="+deleteId
+
+    function deleteItem() {
+        location.href = "http://cart.grainmall.com/deleteItem?skuId=" + deleteId
     }
+
     $(".deleteItemBtn").click(function () {
         deleteId = $(this).attr("skuId");
     });

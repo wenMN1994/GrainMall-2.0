@@ -15,11 +15,11 @@ import javax.websocket.server.PathParam;
  * @version: $
  */
 @Controller
-public class HelloController {
+public class OrderWebController {
 
-    @GetMapping("/{page}.html")
-    public String listPage(@PathVariable("page") String page){
+    @GetMapping("/toTrade")
+    public String toTrade(){
 
-        return page;
+        return "confirm";
     }
 }
