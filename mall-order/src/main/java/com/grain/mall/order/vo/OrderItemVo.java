@@ -17,7 +17,6 @@ import java.util.List;
 public class OrderItemVo {
 
     private Long skuId;
-    private boolean hasStock;
     private String title;
     private String image;
     private List<String> skuAttr;

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author：Dragon Wen
@@ -34,6 +35,10 @@ public class OrderConfirmVo {
     // 优惠券信息...
     @Getter@Setter
     Integer integration;
+
+    // 库存
+    @Getter@Setter
+    Map<Long, Boolean> stocks;
 
     public Integer getCount(){
         Integer i = 0;

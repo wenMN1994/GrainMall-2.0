@@ -28,12 +28,14 @@ public class MallFeignConfig {
             public void apply(RequestTemplate template) {
                 // RequestContextHolder拿到刚进来的这个请求
                 ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-                HttpServletRequest request = attributes.getRequest(); // 旧请求
-                if(request != null){
-                    // 同步请求头数据，Cookie
-                    String cookie = request.getHeader("Cookie");
-                    // 给新请求同步旧请求的Cookie
-                    template.header("Cookie", cookie);
+                if(attributes != null){
+                    HttpServletRequest request = attributes.getRequest(); // 旧请求
+                    if(request != null){
+                        // 同步请求头数据，Cookie
+                        String cookie = request.getHeader("Cookie");
+                        // 给新请求同步旧请求的Cookie
+                        template.header("Cookie", cookie);
+                    }
                 }
             }
         };
