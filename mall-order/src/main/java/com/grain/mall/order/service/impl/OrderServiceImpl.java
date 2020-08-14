@@ -3,6 +3,7 @@ package com.grain.mall.order.service.impl;
 import com.alibaba.fastjson.TypeReference;
 import com.grain.common.utils.R;
 import com.grain.common.vo.MemberRespVo;
+import com.grain.mall.order.constant.OrderConstant;
 import com.grain.mall.order.feign.CartFeignService;
 import com.grain.mall.order.feign.MemberFeignService;
 import com.grain.mall.order.feign.WareFeignService;
@@ -12,13 +13,16 @@ import com.grain.mall.order.vo.OrderConfirmVo;
 import com.grain.mall.order.vo.OrderItemVo;
 import com.grain.mall.order.vo.SkuStockVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -48,6 +52,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     ThreadPoolExecutor threadPoolExecutor;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -97,8 +104,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
         // 其他数据自动计算
 
-        // TODO 防重令牌
+        // 防重令牌
+        String token = UUID.randomUUID().toString().replace("-", "");
+        stringRedisTemplate.opsForValue().set(OrderConstant.USER_ORDER_TOKEN_PREFIX + memberRespVo.getId(), token,30, TimeUnit.MINUTES);
 
+        confirmVo.setOrderToken(token);
         CompletableFuture.allOf(getAddressFuture,cartFuture).get();
         return confirmVo;
     }
