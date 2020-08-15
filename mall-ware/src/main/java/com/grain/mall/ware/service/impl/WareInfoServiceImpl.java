@@ -3,6 +3,7 @@ package com.grain.mall.ware.service.impl;
 import com.alibaba.fastjson.TypeReference;
 import com.grain.common.utils.R;
 import com.grain.mall.ware.feign.MemberFeignService;
+import com.grain.mall.ware.vo.FareVo;
 import com.grain.mall.ware.vo.MemberAddressVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,9 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
     }
 
     @Override
-    public BigDecimal getFare(Long addrId) {
+    public FareVo getFare(Long addrId) {
 
+        FareVo fareVo = new FareVo();
         R r = memberFeignService.addrInfo(addrId);
         MemberAddressVo data = r.getData("memberReceiveAddress", new TypeReference<MemberAddressVo>() {
         });
@@ -56,7 +58,10 @@ public class WareInfoServiceImpl extends ServiceImpl<WareInfoDao, WareInfoEntity
             // TODO 模拟运费计算，后期改为对接第三方物流获取
             String phone = data.getPhone();
             String substring = phone.substring(phone.length() - 1, phone.length());
-            return new BigDecimal(substring);
+            BigDecimal bigDecimal = new BigDecimal(substring);
+            fareVo.setAddress(data);
+            fareVo.setFare(bigDecimal);
+            return fareVo;
         }
         return null;
     }

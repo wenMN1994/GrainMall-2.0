@@ -1009,9 +1009,9 @@
         //给表单回填选择的地址
         $("#addrIdInput").val(addrId);
 		$.get("http://grainmall.com/api/ware/wareinfo/fare?addrId="+addrId, function (data) {
-			$("#fareEle").text(data.data+".00");
+			$("#fareEle").text(data.data.fare+".00");
 			var total = [[${orderConfirmData.getTotal()}]]
-			var payPrice = total*1 + data.data;
+			var payPrice = total*1 + data.data.fare;
 			$("#payPriceEle").text(payPrice + ".00");
             $("#payPriceInput").val(payPrice);
 		})
