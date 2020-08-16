@@ -38,7 +38,7 @@ public class OrderEntity implements Serializable {
 	 */
 	private Long couponId;
 	/**
-	 * create_time
+	 * 创建时间
 	 */
 	private Date createTime;
 	/**

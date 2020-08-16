@@ -2,7 +2,9 @@ package com.grain.mall.ware.service.impl;
 
 import com.grain.common.utils.R;
 import com.grain.mall.ware.feign.ProductFeignService;
+import com.grain.mall.ware.vo.LockStockResult;
 import com.grain.mall.ware.vo.SkuHasStockVo;
+import com.grain.mall.ware.vo.WareSkuLockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,5 +101,10 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             return vo;
         }).collect(Collectors.toList());
         return collect;
+    }
+
+    @Override
+    public List<LockStockResult> orderLockStock(WareSkuLockVo vo) {
+        return null;
     }
 }

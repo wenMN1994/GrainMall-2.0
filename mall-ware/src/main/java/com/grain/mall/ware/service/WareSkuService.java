@@ -3,7 +3,9 @@ package com.grain.mall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.ware.entity.WareSkuEntity;
+import com.grain.mall.ware.vo.LockStockResult;
 import com.grain.mall.ware.vo.SkuHasStockVo;
+import com.grain.mall.ware.vo.WareSkuLockVo;
 
 import java.util.List;
 import java.util.Map;
@@ -28,5 +30,12 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      * @return
      */
     List<SkuHasStockVo> getSkuHasStock(List<Long> skuIds);
+
+    /**
+     * 为某个订单锁定库存
+     * @param vo
+     * @return
+     */
+    List<LockStockResult> orderLockStock(WareSkuLockVo vo);
 }
 
