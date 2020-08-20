@@ -47,13 +47,13 @@ public class OrderWebController {
      * @return
      */
     @PostMapping("/submitOrder")
-    public String submitOrder(SubmitOrderVo vo){
+    public String submitOrder(SubmitOrderVo vo, Model model){
 
         SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
         System.out.println("订单提交的数据..."+vo.toString());
         if(responseVo.getCode() == 0){
             // 下单成功跳转到支付选择页
-
+            model.addAttribute("submitOrderResp", responseVo);
             return "pay";
         }else {
             // 下单失败回到订单确认页重新确认订单信息

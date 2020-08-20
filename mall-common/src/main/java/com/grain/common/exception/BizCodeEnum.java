@@ -18,6 +18,7 @@ package com.grain.common.exception;
  *  13: 购物车
  *  14: 物流
  *  15：用户
+ *  21：库存
  * @modified By：
  * @version: $
  */
@@ -30,7 +31,8 @@ public enum BizCodeEnum {
     MOBILE_EXIST_EXCEPTION(15002,"手机号码已被注册"),
     USER_NOT_EXIST_EXCEPTION(15003,"用户不存在"),
     PASSWORD_ERROR_EXCEPTION(15004,"密码错误"),
-    OAUTH2_LOGIN_EXCEPTION(15005, "社交登录失败");
+    OAUTH2_LOGIN_EXCEPTION(15005, "社交登录失败"),
+    NO_STOCK_EXCEPTION(21000, "商品库存不足");
 
     private int code;
     private String msg;

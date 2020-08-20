@@ -133,6 +133,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         submitOrderVoThreadLocal.set(vo);
         SubmitOrderResponseVo responseVo = new SubmitOrderResponseVo();
         MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
+        responseVo.setCode(0);
         // 1、验证令牌【令牌的对比和删除必须保证原子性】 0：令牌校验失败 1：删除成功
         String script = "if redis.call('get',KEYS[1])==ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end";
         String orderToken = vo.getOrderToken();
@@ -166,16 +167,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 R r = wareFeignService.orderLockStock(lockVo);
                 if(r.getCode() == 0){
                     // 库存锁定成功
+                    responseVo.setOrder(order.getOrder());
+                    return responseVo;
                 }else {
                     // 库存锁定失败
+                    responseVo.setCode(3);
+                    return responseVo;
                 }
             }else {
                 responseVo.setCode(2);
                 return responseVo;
             }
         }
-
-        return null;
     }
 
     /**

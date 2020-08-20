@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.grain.common.exception.BizCodeEnum;
+import com.grain.mall.ware.exception.NoStockException;
 import com.grain.mall.ware.vo.LockStockResult;
 import com.grain.mall.ware.vo.SkuHasStockVo;
 import com.grain.mall.ware.vo.WareSkuLockVo;
@@ -32,8 +34,13 @@ public class WareSkuController {
 
     @PostMapping("/lock/order")
     public R orderLockStock(@RequestBody WareSkuLockVo vo){
-        List<LockStockResult> stockResults = wareSkuService.orderLockStock(vo);
-        return R.ok().setData(stockResults);
+        Boolean lockStock = null;
+        try {
+            lockStock = wareSkuService.orderLockStock(vo);
+            return R.ok();
+        } catch (NoStockException e) {
+            return R.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(), BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
+        }
     }
 
     /**
