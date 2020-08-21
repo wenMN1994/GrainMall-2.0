@@ -2,6 +2,7 @@ package com.grain.mall.order.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.grain.common.exception.NoStockException;
 import com.grain.common.utils.R;
 import com.grain.common.vo.MemberRespVo;
 import com.grain.mall.order.constant.OrderConstant;
@@ -171,8 +172,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                     return responseVo;
                 }else {
                     // 库存锁定失败
-                    responseVo.setCode(3);
-                    return responseVo;
+                    String msg = (String) r.get("msg");
+                    throw new NoStockException(msg);
                 }
             }else {
                 responseVo.setCode(2);
@@ -203,6 +204,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         List<OrderItemEntity> orderItemEntities = buildOrderItems(orderSn);
         // 计算相关价格
         computerPrice(orderEntity,orderItemEntities);
+        orderCreateTo.setOrder(orderEntity);
+        orderCreateTo.setOrderItems(orderItemEntities);
         return orderCreateTo;
     }
 
@@ -311,6 +314,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         orderItemEntity.setSkuPic(cartItem.getImage());
         String skuAttr = StringUtils.collectionToDelimitedString(cartItem.getSkuAttr(), ";");
         orderItemEntity.setSkuAttrsVals(skuAttr);
+        orderItemEntity.setSkuPrice(cartItem.getPrice());
         orderItemEntity.setSkuQuantity(cartItem.getCount());
         // 4、优惠信息（暂时不做）
         // 5、积分信息

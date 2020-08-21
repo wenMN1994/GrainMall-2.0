@@ -1,7 +1,7 @@
 package com.grain.mall.ware.service.impl;
 
+import com.grain.common.exception.NoStockException;
 import com.grain.common.utils.R;
-import com.grain.mall.ware.exception.NoStockException;
 import com.grain.mall.ware.feign.ProductFeignService;
 import com.grain.mall.ware.vo.OrderItemVo;
 import com.grain.mall.ware.vo.SkuHasStockVo;

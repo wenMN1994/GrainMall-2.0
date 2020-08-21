@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.concurrent.ExecutionException;
 
@@ -47,7 +48,7 @@ public class OrderWebController {
      * @return
      */
     @PostMapping("/submitOrder")
-    public String submitOrder(SubmitOrderVo vo, Model model){
+    public String submitOrder(SubmitOrderVo vo, Model model, RedirectAttributes redirectAttributes){
 
         SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
         System.out.println("订单提交的数据..."+vo.toString());
@@ -57,6 +58,12 @@ public class OrderWebController {
             return "pay";
         }else {
             // 下单失败回到订单确认页重新确认订单信息
+            String msg = "下单失败：";
+            switch (responseVo.getCode()){
+                case 1: msg += "订单信息过期，请重新刷新再次提交"; break;
+                case 2: msg += "订单商品价格发生变化，请确认后再次提交"; break;
+            }
+            redirectAttributes.addFlashAttribute("msg", msg);
             return "redirect:http://order.grainmall.com/toTrade";
         }
     }
