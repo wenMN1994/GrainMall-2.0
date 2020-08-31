@@ -19,14 +19,26 @@ import java.util.concurrent.ExecutionException;
  */
 public interface OrderService extends IService<OrderEntity> {
 
+    /**
+     * 分页查询
+     * @param params
+     * @return
+     */
     PageUtils queryPage(Map<String, Object> params);
 
     /**
      * 订单确认页返回需要的数据
      * @return
+     * @throws ExecutionException
+     * @throws InterruptedException
      */
     OrderConfirmVo confirmOrder() throws ExecutionException, InterruptedException;
 
+    /**
+     * 提交订单
+     * @param vo
+     * @return
+     */
     SubmitOrderResponseVo submitOrder(SubmitOrderVo vo);
 }
 

@@ -7,8 +7,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
+/**
+ * @author DragonWen
+ */
 @EnableRedisHttpSession
-@EnableFeignClients // 开启远程调用
+@EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class MallSearchApplication {

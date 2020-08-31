@@ -16,6 +16,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  *          原始的request，response都被包装成SessionRepositoryRequestWrapper，SessionRepositoryResponseWrapper；
  *          以后获取session。request.getSession();
  *          wrappedRequest.getSession();-->SessionRepository中获取到的
+ * @author DragonWen
  */
 @EnableRedisHttpSession
 @EnableFeignClients
