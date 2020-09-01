@@ -1,6 +1,7 @@
 package com.grain.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.grain.common.to.mq.StockLockedTo;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.ware.entity.WareSkuEntity;
 import com.grain.mall.ware.vo.SkuHasStockVo;
@@ -36,5 +37,7 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      * @return
      */
     Boolean orderLockStock(WareSkuLockVo vo);
+
+    void unLockStock(StockLockedTo to);
 }
 

@@ -173,6 +173,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 if(r.getCode() == 0){
                     // 库存锁定成功
                     responseVo.setOrder(order.getOrder());
+                    int i = 10/0;
                     return responseVo;
                 }else {
                     // 库存锁定失败
@@ -184,6 +185,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 return responseVo;
             }
         }
+    }
+
+    @Override
+    public OrderEntity getOrderByOrderSn(String orderSn) {
+        OrderEntity order = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+        return order;
     }
 
     /**
