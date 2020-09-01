@@ -143,7 +143,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
                     break;
                 }
             }
-            if(skuStocked){
+            if(!skuStocked){
                 // 当前商品所有仓库都没有锁住
                 throw new NoStockException(skuId);
             }

@@ -6,7 +6,6 @@ import com.grain.common.exception.NoStockException;
 import com.grain.common.utils.R;
 import com.grain.common.vo.MemberRespVo;
 import com.grain.mall.order.constant.OrderConstant;
-import com.grain.mall.order.dao.OrderItemDao;
 import com.grain.mall.order.entity.OrderItemEntity;
 import com.grain.mall.order.enume.OrderStatusEnum;
 import com.grain.mall.order.feign.CartFeignService;
@@ -128,6 +127,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
+    /**
+     * @GlobalTransactional AT模式不适合高并发场景
+     * @param vo
+     * @return
+     */
     @Transactional
     @Override
     public SubmitOrderResponseVo submitOrder(SubmitOrderVo vo) {
