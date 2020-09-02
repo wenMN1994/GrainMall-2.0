@@ -2,6 +2,7 @@ package com.grain.mall.ware.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.grain.common.exception.NoStockException;
+import com.grain.common.to.mq.OrderTo;
 import com.grain.common.to.mq.StockDetailTo;
 import com.grain.common.to.mq.StockLockedTo;
 import com.grain.common.utils.R;
@@ -240,6 +241,25 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             }
         }else {
             // 无需解锁
+        }
+    }
+
+    /**
+     * 防止订单服务卡顿，导致订单状态消息一直改不了，库存消息优先到期。查订单新建状态，什么都不做就走了
+     * 导致卡顿的订单，永远无法解锁库存
+     * @param orderTo
+     */
+    @Transactional
+    @Override
+    public void unLockStock(OrderTo orderTo) {
+        String orderSn = orderTo.getOrderSn();
+        // 查询最新库存的状态，防止重复解锁库存
+        WareOrderTaskEntity entity = wareOrderTaskService.getOrderTaskByOrderSn(orderSn);
+        // 按照工作单找到所有没有解锁的库存，进行解锁
+        List<WareOrderTaskDetailEntity> list = wareOrderTaskDetailService.list(new QueryWrapper<WareOrderTaskDetailEntity>()
+                .eq("task_id", entity.getId()).eq("lock_status", 1));
+        for (WareOrderTaskDetailEntity taskDetailEntity : list) {
+            unLockStock(taskDetailEntity.getSkuId(),taskDetailEntity.getWareId(),taskDetailEntity.getSkuNum(),taskDetailEntity.getId());
         }
     }
 

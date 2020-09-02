@@ -1,5 +1,6 @@
 package com.grain.mall.ware.listener;
 
+import com.grain.common.to.mq.OrderTo;
 import com.grain.common.to.mq.StockLockedTo;
 import com.grain.mall.ware.service.WareSkuService;
 import com.rabbitmq.client.Channel;
@@ -31,6 +32,17 @@ public class StockReleaseListener {
         System.out.println("收到解锁库存的消息");
         try {
             wareSkuService.unLockStock(to);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+        } catch (Exception e) {
+            channel.basicReject(message.getMessageProperties().getDeliveryTag(),true);
+        }
+    }
+
+    @RabbitHandler
+    public void handleOrderCloseRelease(OrderTo orderTo, Message message, Channel channel) throws IOException {
+        System.out.println("订单关闭准备解锁库存");
+        try {
+            wareSkuService.unLockStock(orderTo);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
         } catch (Exception e) {
             channel.basicReject(message.getMessageProperties().getDeliveryTag(),true);

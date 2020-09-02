@@ -13,6 +13,9 @@ import com.grain.mall.ware.entity.WareOrderTaskEntity;
 import com.grain.mall.ware.service.WareOrderTaskService;
 
 
+/**
+ * @author DragonWen
+ */
 @Service("wareOrderTaskService")
 public class WareOrderTaskServiceImpl extends ServiceImpl<WareOrderTaskDao, WareOrderTaskEntity> implements WareOrderTaskService {
 
@@ -24,6 +27,12 @@ public class WareOrderTaskServiceImpl extends ServiceImpl<WareOrderTaskDao, Ware
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public WareOrderTaskEntity getOrderTaskByOrderSn(String orderSn) {
+        WareOrderTaskEntity orderTaskEntity = this.getOne(new QueryWrapper<WareOrderTaskEntity>().eq("order_sn", orderSn));
+        return orderTaskEntity;
     }
 
 }

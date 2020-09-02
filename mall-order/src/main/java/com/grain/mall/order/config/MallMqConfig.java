@@ -1,13 +1,9 @@
 package com.grain.mall.order.config;
 
-import com.grain.mall.order.entity.OrderEntity;
-import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,12 +17,6 @@ import java.util.Map;
  */
 @Configuration
 public class MallMqConfig {
-
-    @RabbitListener(queues = "order.release.order.queue")
-    public void listener(OrderEntity entity, Channel channel, Message message) throws IOException {
-        System.out.println("收到过期的订单信息。准备关闭订单"+entity.getOrderSn());
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
-    }
 
     @Bean
     public Queue orderDelayQueue(){
@@ -63,6 +53,18 @@ public class MallMqConfig {
                 Binding.DestinationType.QUEUE,
                 "order-event-exchange",
                 "order.release.order",null);
+    }
+
+    /**
+     * 订单释放直接和库存释放进行绑定
+     * @return
+     */
+    @Bean
+    public Binding orderReleaseOtherBinding(){
+        return new Binding("stock.release.stock.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.release.other.#",null);
     }
 
 }

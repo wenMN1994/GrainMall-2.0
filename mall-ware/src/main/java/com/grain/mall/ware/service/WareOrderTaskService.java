@@ -15,6 +15,18 @@ import java.util.Map;
  */
 public interface WareOrderTaskService extends IService<WareOrderTaskEntity> {
 
+    /**
+     * 分页查询
+     * @param params
+     * @return
+     */
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 根据订单编号查询库存工作单
+     * @param orderSn
+     * @return
+     */
+    WareOrderTaskEntity getOrderTaskByOrderSn(String orderSn);
 }
 
