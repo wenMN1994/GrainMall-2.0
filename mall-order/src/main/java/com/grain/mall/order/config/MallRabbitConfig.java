@@ -66,7 +66,7 @@ public class MallRabbitConfig {
              */
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-
+                // 服务器收到了
             }
         });
 
@@ -82,7 +82,7 @@ public class MallRabbitConfig {
              */
             @Override
             public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-
+                // 报错了。修改数据库当前的状态->错误
             }
         });
     }

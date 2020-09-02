@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.order.entity.OrderEntity;
 import com.grain.mall.order.vo.OrderConfirmVo;
+import com.grain.mall.order.vo.PayVo;
 import com.grain.mall.order.vo.SubmitOrderResponseVo;
 import com.grain.mall.order.vo.SubmitOrderVo;
 
@@ -53,5 +54,12 @@ public interface OrderService extends IService<OrderEntity> {
      * @param entity
      */
     void closeOrder(OrderEntity entity);
+
+    /**
+     * 获取当前订单的支付信息
+     * @param orderSn
+     * @return
+     */
+    PayVo getOrderPay(String orderSn);
 }
 

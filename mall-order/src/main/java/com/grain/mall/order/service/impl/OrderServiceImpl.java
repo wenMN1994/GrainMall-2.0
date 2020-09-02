@@ -17,6 +17,7 @@ import com.grain.mall.order.interceptor.LoginUserInterceptor;
 import com.grain.mall.order.service.OrderItemService;
 import com.grain.mall.order.to.OrderCreateTo;
 import com.grain.mall.order.vo.*;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,8 +215,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             OrderTo orderTo = new OrderTo();
             BeanUtils.copyProperties(orderEntity,orderTo);
             // 发给MQ
-            rabbitTemplate.convertAndSend("order-event-exchange","order.release.other",orderTo);
+            try {
+                // 保证消息一定会发送出去，每一个消息都可以做好日志记录（给数据库保存每一个消息的详细信息）
+                // 定期扫描数据库将失败的消息再发送一遍
+                rabbitTemplate.convertAndSend("order-event-exchange","order.release.other",orderTo);
+            } catch (AmqpException e) {
+                // 将没发送成功的消息进行重试发送
+            }
         }
+    }
+
+    @Override
+    public PayVo getOrderPay(String orderSn) {
+        PayVo payVo = new PayVo();
+        OrderEntity order = this.getOrderByOrderSn(orderSn);
+        BigDecimal bigDecimal = order.getPayAmount().setScale(2, BigDecimal.ROUND_UP);
+        payVo.setTotal_amount(bigDecimal.toString());
+        payVo.setOut_trade_no(order.getOrderSn());
+        List<OrderItemEntity> orderItems = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", orderSn));
+        OrderItemEntity entity = orderItems.get(0);
+        payVo.setSubject(entity.getSkuName());
+        payVo.setBody(entity.getSkuAttrsVals());
+        return payVo;
     }
 
     /**
