@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * 1、想要远程调用别的服务
@@ -20,6 +21,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @modified By：
  * @version: $
  */
+@EnableRedisHttpSession
 @EnableFeignClients(basePackages = "com.grain.mall.member.feign")
 @EnableDiscoveryClient
 @SpringBootApplication

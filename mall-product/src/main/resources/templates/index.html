@@ -103,7 +103,7 @@
           </li>
           <span th:if="${session.loginUser==null}">|</span>
           <li>
-            <a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'http://order.grainmall.com/list.html'}">我的订单</a>
+            <a th:href="${session.loginUser==null?'http://auth.grainmall.com/login.html':'http://member.grainmall.com/memberOrder.html'}">我的订单</a>
           </li>
           <span th:if="${session.loginUser!=null}">|</span>
         </ul>
