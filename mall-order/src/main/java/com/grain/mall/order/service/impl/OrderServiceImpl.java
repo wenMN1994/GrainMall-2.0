@@ -8,6 +8,7 @@ import com.grain.common.utils.R;
 import com.grain.common.vo.MemberRespVo;
 import com.grain.mall.order.constant.OrderConstant;
 import com.grain.mall.order.entity.OrderItemEntity;
+import com.grain.mall.order.entity.PaymentInfoEntity;
 import com.grain.mall.order.enume.OrderStatusEnum;
 import com.grain.mall.order.feign.CartFeignService;
 import com.grain.mall.order.feign.MemberFeignService;
@@ -15,6 +16,7 @@ import com.grain.mall.order.feign.ProductFeignService;
 import com.grain.mall.order.feign.WareFeignService;
 import com.grain.mall.order.interceptor.LoginUserInterceptor;
 import com.grain.mall.order.service.OrderItemService;
+import com.grain.mall.order.service.PaymentInfoService;
 import com.grain.mall.order.to.OrderCreateTo;
 import com.grain.mall.order.vo.*;
 import org.springframework.amqp.AmqpException;
@@ -66,6 +68,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     ProductFeignService productFeignService;
+
+    @Autowired
+    PaymentInfoService paymentInfoService;
 
     @Autowired
     ThreadPoolExecutor threadPoolExecutor;
@@ -255,6 +260,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         page.setRecords(order_sn);
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public String handlePayResult(PayAsyncVo vo) {
+        // 1、保存交易流水
+        PaymentInfoEntity infoEntity = new PaymentInfoEntity();
+        infoEntity.setAlipayTradeNo(vo.getTrade_no());
+        infoEntity.setOrderSn(vo.getOut_trade_no());
+        infoEntity.setPaymentStatus(vo.getTrade_status());
+        infoEntity.setCallbackTime(vo.getNotify_time());
+        paymentInfoService.save(infoEntity);
+        // 2、修改订单的状态信息
+        if("TRADE_SUCCESS".equals(vo.getTrade_status()) || "TRADE_FINISHED ".equals(vo.getTrade_status())){
+            // 支付成功
+            String outTradeNo = vo.getOut_trade_no();
+            this.baseMapper.updateOrderStatus(outTradeNo,OrderStatusEnum.PAYED.getCode());
+        }
+        return "success";
     }
 
     /**
