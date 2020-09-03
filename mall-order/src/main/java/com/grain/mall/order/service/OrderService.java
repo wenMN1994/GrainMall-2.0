@@ -61,5 +61,12 @@ public interface OrderService extends IService<OrderEntity> {
      * @return
      */
     PayVo getOrderPay(String orderSn);
+
+    /**
+     * 查询当前登录用户的所有订单列表
+     * @param params
+     * @return
+     */
+    PageUtils queryPageWithItem(Map<String, Object> params);
 }
 
