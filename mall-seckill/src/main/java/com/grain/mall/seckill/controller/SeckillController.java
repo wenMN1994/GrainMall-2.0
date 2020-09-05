@@ -6,6 +6,7 @@ import com.grain.mall.seckill.to.SeckillSkuRedisTo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -38,5 +39,13 @@ public class SeckillController {
     public R getSkuSeckillInfo(@PathVariable("skuId") Long skuId){
         SeckillSkuRedisTo seckillSkuRedisTo = seckillService.getSkuSeckillInfo(skuId);
         return R.ok().setData(seckillSkuRedisTo);
+    }
+
+    @GetMapping("/kill")
+    public R seckill(@RequestParam("killId") String killId,
+                     @RequestParam("key") String key,
+                     @RequestParam("num") Integer num){
+        // 1、判断是否登陆
+        return null;
     }
 }

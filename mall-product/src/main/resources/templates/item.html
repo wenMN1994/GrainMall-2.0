@@ -635,7 +635,12 @@
 
                         </div>
                     </div>
-                    <div class="box-btns-two">
+                    <div class="box-btns-two" th:if="${item.seckillInfo != null && #dates.createNow().getTime() >= item.seckillInfo.startTime && #dates.createNow().getTime() <= item.seckillInfo.endTime}">
+                        <a href="#" id="seckill" th:attr="skuId=${item.info.skuId},sessionId=${item.seckillInfo.promotionSessionId},code=${item.seckillInfo.randomCode}">
+                            立即抢购
+                        </a>
+                    </div>
+                    <div class="box-btns-two" th:if="${item.seckillInfo == null || #dates.createNow().getTime() < item.seckillInfo.startTime || #dates.createNow().getTime() > item.seckillInfo.endTime}">
                         <a href="#" id="addToCart" th:attr="skuId=${item.info.skuId}">
                             加入购物车
                         </a>
@@ -1268,6 +1273,19 @@
         location.href = "http://cart.grainmall.com/addToCart?skuId=" + skuId + "&num=" + num;
         return false;
     });
+    
+    $("#seckill").click(function () {
+        var isLongin = [[${session.loginUser!=null}]]
+        if(isLongin){
+            var killId = $(this).attr("sessionid")+"_"+$(this).attr("skuid");
+            var key = $(this).attr("code");
+            var num = $("#numInput").val();
+            location.href="http://seckill.grainmall.com/kill?killId=" + killId + "&key=" + key + "&num=" + num;
+        }else {
+            location.href="http://auth.grainmall.com/login.html";
+        }
+        return false;
+    })
 </script>
 
 </html>
