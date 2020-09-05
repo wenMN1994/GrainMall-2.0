@@ -5,10 +5,10 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0:8848
+        server-addr: 127.0.0.1:8848
   redis:
     host: 192.168.31.70
     port: 6379
 
 server:
-  port: 14001
+  port: 15001

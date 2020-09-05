@@ -2,6 +2,8 @@ server:
   port: 7001
 
 spring:
+  application:
+    name: mall-coupon
   datasource:
     username: root
     password: root
@@ -11,8 +13,6 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-  application:
-    name: mall-coupon
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
