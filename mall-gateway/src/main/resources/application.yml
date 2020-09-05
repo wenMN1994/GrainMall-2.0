@@ -81,4 +81,9 @@ spring:
           uri: lb://mall-member
           predicates:
             - Host=member.grainmall.com
+
+        - id: grain_mall_seckill_route
+          uri: lb://mall-seckill
+          predicates:
+            - Host=seckill.grainmall.com
 # 前端项目 /api

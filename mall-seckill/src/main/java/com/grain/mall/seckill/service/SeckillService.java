@@ -1,5 +1,9 @@
 package com.grain.mall.seckill.service;
 
+import com.grain.mall.seckill.to.SeckillSkuRedisTo;
+
+import java.util.List;
+
 /**
  * @author：Dragon Wen
  * @email：18475536452@163.com
@@ -13,4 +17,10 @@ public interface SeckillService {
      * 上架最近3天的秒杀商品
      */
     void uploadSeckillSkuLatest3Days();
+
+    /**
+     *
+     * @return
+     */
+    List<SeckillSkuRedisTo> getCurrentSeckillSkus();
 }
