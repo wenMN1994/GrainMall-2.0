@@ -1,6 +1,5 @@
-package com.grain.mall.seckill.to;
+package com.grain.mall.product.vo;
 
-import com.grain.mall.seckill.vo.SkuInfoVo;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -8,13 +7,13 @@ import java.math.BigDecimal;
 /**
  * @author：Dragon Wen
  * @email：18475536452@163.com
- * @date：Created in 2020/9/4 20:17
+ * @date：Created in 2020/9/5 16:40
  * @description：
  * @modified By：
  * @version: $
  */
 @Data
-public class SeckillSkuRedisTo {
+public class SeckillInfoVo {
 
     /**
      * 活动id
@@ -44,11 +43,6 @@ public class SeckillSkuRedisTo {
      * 排序
      */
     private Integer seckillSort;
-
-    /**
-     * sku的详细信息
-     */
-    private SkuInfoVo skuInfo;
 
     /**
      * 商品秒杀随机码

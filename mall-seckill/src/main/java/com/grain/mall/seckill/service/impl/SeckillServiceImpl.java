@@ -8,7 +8,6 @@ import com.grain.mall.seckill.feign.ProductFeignService;
 import com.grain.mall.seckill.service.SeckillService;
 import com.grain.mall.seckill.to.SeckillSkuRedisTo;
 import com.grain.mall.seckill.vo.SeckillSessionsWithSkus;
-import com.grain.mall.seckill.vo.SeckillSkuVo;
 import com.grain.mall.seckill.vo.SkuInfoVo;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
@@ -19,6 +18,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -95,6 +95,31 @@ public class SeckillServiceImpl implements SeckillService {
         }
 
 
+        return null;
+    }
+
+    @Override
+    public SeckillSkuRedisTo getSkuSeckillInfo(Long skuId) {
+        // 1、找到所有需要参与秒杀的商品的key
+        BoundHashOperations<String, String, String> hashOps = stringRedisTemplate.boundHashOps(SKUKILL_CACHE_PREFIX);
+        Set<String> keys = hashOps.keys();
+        if(keys != null && keys.size() > 0){
+            String regx = "\\d_" + skuId;
+            for (String key : keys) {
+                if(Pattern.matches(regx,key)){
+                    String json = hashOps.get(key);
+                    SeckillSkuRedisTo skuRedisTo = JSON.parseObject(json, SeckillSkuRedisTo.class);
+                    // 随机码
+                    long currentTime = new Date().getTime();
+                    if(currentTime >= skuRedisTo.getStartTime() && currentTime <= skuRedisTo.getEndTime()){
+
+                    } else {
+                        skuRedisTo.setRandomCode(null);
+                    }
+                    return skuRedisTo;
+                }
+            }
+        }
         return null;
     }
 

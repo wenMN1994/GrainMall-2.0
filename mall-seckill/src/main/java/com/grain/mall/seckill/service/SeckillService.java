@@ -23,4 +23,11 @@ public interface SeckillService {
      * @return
      */
     List<SeckillSkuRedisTo> getCurrentSeckillSkus();
+
+    /**
+     *
+     * @param skuId
+     * @return
+     */
+    SeckillSkuRedisTo getSkuSeckillInfo(Long skuId);
 }

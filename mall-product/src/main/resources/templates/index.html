@@ -590,18 +590,20 @@
       window.location.href="http://search.grainmall.com/list.html?keyword="+keyword;
   }
 
-  $.get("http://seckill.grainmall.com/currentSeckillSkus",function(resp){
+  function to_href(skuId){
+    location.href = "http://item.grainmall.com/"+ skuId +".html"
+  }
 
+  $.get("http://seckill.grainmall.com/currentSeckillSkus",function(resp){
     if(resp.data.length > 0){
       resp.data.forEach(function (item) {
-        $("<li></li>")
+        $("<li onclick='to_href("+ item.skuId +")'></li>")
                 .append($("<img style='width: 130px; height: 130px;' src='"+item.skuInfo.skuDefaultImg+"'/>"))
                 .append($("<p>"+item.skuInfo.skuTitle+"</p>"))
                 .append($("<span>¥"+item.seckillPrice+"</span>"))
                 .append($("<s>¥"+item.skuInfo.price+"</s>"))
                 .appendTo("#seckillSkuCountent");
       })
-
     }
   });
 
