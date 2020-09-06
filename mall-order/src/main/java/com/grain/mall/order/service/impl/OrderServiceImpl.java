@@ -286,6 +286,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         // TODO 保存订单信息
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setOrderSn(seckillOrder.getOrderSn());
+        orderEntity.setCreateTime(new Date());
         orderEntity.setMemberId(seckillOrder.getMemberId());
         orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
         BigDecimal multiply = seckillOrder.getSeckillPrice().multiply(new BigDecimal("" + seckillOrder.getNum()));
@@ -294,6 +295,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         // TODO 保存订单项信息
         OrderItemEntity orderItemEntity = new OrderItemEntity();
         orderItemEntity.setOrderSn(seckillOrder.getOrderSn());
+
         orderItemEntity.setRealAmount(multiply);
         orderItemEntity.setSkuQuantity(seckillOrder.getNum());
         orderItemService.save(orderItemEntity);

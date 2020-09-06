@@ -1,6 +1,8 @@
 spring:
   application:
     name: mall-seckill
+  thymeleaf:
+    cache: false
 
   cloud:
     nacos:

@@ -135,6 +135,7 @@ public class SeckillServiceImpl implements SeckillService {
         return null;
     }
 
+    // TODO 上架秒杀商品的时候，每一个数据都要设置过期时间
     @Override
     public String kill(String killId, String key, Integer num) {
 
