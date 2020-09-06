@@ -30,4 +30,13 @@ public interface SeckillService {
      * @return
      */
     SeckillSkuRedisTo getSkuSeckillInfo(Long skuId);
+
+    /**
+     *
+     * @param killId
+     * @param key
+     * @param num
+     * @return
+     */
+    String kill(String killId, String key, Integer num);
 }

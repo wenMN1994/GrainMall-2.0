@@ -35,6 +35,12 @@ public class MallMqConfig {
     }
 
     @Bean
+    public Queue orderSeckillOrderQueue(){
+        Queue queue = new Queue("order.seckill.order.queue", true, false, false);
+        return queue;
+    }
+
+    @Bean
     public Exchange orderEventExchange(){
         return new TopicExchange("order-event-exchange",true,false);
     }
@@ -44,7 +50,8 @@ public class MallMqConfig {
         return new Binding("order.delay.queue",
                  Binding.DestinationType.QUEUE,
                 "order-event-exchange",
-                "order.create.order",null);
+                "order.create.order",
+                null);
     }
 
     @Bean
@@ -52,7 +59,8 @@ public class MallMqConfig {
         return new Binding("order.release.order.queue",
                 Binding.DestinationType.QUEUE,
                 "order-event-exchange",
-                "order.release.order",null);
+                "order.release.order",
+                null);
     }
 
     /**
@@ -64,7 +72,21 @@ public class MallMqConfig {
         return new Binding("stock.release.stock.queue",
                 Binding.DestinationType.QUEUE,
                 "order-event-exchange",
-                "order.release.other.#",null);
+                "order.release.other.#",
+                null);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Bean
+    public Binding orderSeckillOrderBinding(){
+        return new Binding("order.seckill.order.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.seckill.order",
+                null);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.grain.mall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.grain.common.to.mq.SeckillOrderTo;
 import com.grain.common.utils.PageUtils;
 import com.grain.mall.order.entity.OrderEntity;
 import com.grain.mall.order.vo.*;
@@ -72,5 +73,11 @@ public interface OrderService extends IService<OrderEntity> {
      * @return
      */
     String handlePayResult(PayAsyncVo vo);
+
+    /**
+     * 保存秒杀订单信息
+     * @param seckillOrder
+     */
+    void saveSeckillOrder(SeckillOrderTo seckillOrder);
 }
 

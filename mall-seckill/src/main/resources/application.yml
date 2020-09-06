@@ -11,5 +11,14 @@ spring:
     port: 6379
   session:
     store-type: redis
+  rabbitmq:
+    host: 192.168.31.70
+    port: 5672
+    virtual-host: /
+    publisher-confirms: true
+    publisher-returns: true
+    template:
+      mandatory: true
+
 server:
   port: 15001

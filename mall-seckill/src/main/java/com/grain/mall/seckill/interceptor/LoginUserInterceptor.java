@@ -27,10 +27,16 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         boolean match = new AntPathMatcher().match("/kill", uri);
         if(match){
-            // 没登录就去登录
-            request.getSession().setAttribute("msg","请先进行登录");
-            response.sendRedirect("http://auth.grainmall.com/login.html");
-            return false;
+            MemberRespVo attribute = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
+            if(attribute != null){
+                loginUser.set(attribute);
+                return true;
+            }else {
+                // 没登录就去登录
+                request.getSession().setAttribute("msg","请先进行登录");
+                response.sendRedirect("http://auth.grainmall.com/login.html");
+                return false;
+            }
         }
         return true;
     }
