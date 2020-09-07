@@ -201,20 +201,23 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     private void saveSessionInfos(List<SeckillSessionsWithSkus> sessions){
-        sessions.stream().forEach(session -> {
-            long startTime = session.getStartTime().getTime();
-            long endTime = session.getEndTime().getTime();
-            String key = SESSIONS_CACHE_PREFIX + startTime + "_" + endTime;
-            Boolean hasKey = stringRedisTemplate.hasKey(key);
-            if(!hasKey){
-                List<String> collect = session.getRelationSkuEntities().stream().map(item ->
-                        item.getPromotionSessionId().toString()+"_"+item.getSkuId().toString()
-                ).collect(Collectors.toList());
-                // 缓存活动信息
-                stringRedisTemplate.opsForList().leftPushAll(key,collect);
-            }
+        if(sessions != null){
+            sessions.stream().forEach(session -> {
+                long startTime = session.getStartTime().getTime();
+                long endTime = session.getEndTime().getTime();
+                String key = SESSIONS_CACHE_PREFIX + startTime + "_" + endTime;
+                Boolean hasKey = stringRedisTemplate.hasKey(key);
+                if(!hasKey){
+                    List<String> collect = session.getRelationSkuEntities().stream().map(item ->
+                            item.getPromotionSessionId().toString()+"_"+item.getSkuId().toString()
+                    ).collect(Collectors.toList());
+                    // 缓存活动信息
+                    stringRedisTemplate.opsForList().leftPushAll(key,collect);
+                }
 
-        });
+            });
+        }
+
     }
 
     private void saveSessionSkuInfos(List<SeckillSessionsWithSkus> sessions){

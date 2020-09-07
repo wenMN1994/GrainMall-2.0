@@ -3,11 +3,14 @@ spring:
     name: mall-seckill
   thymeleaf:
     cache: false
-
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8888
+        port: 8719
   redis:
     host: 192.168.31.70
     port: 6379
