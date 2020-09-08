@@ -1,6 +1,7 @@
 package com.grain.mall.order.config;
 
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -8,6 +9,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.annotation.PostConstruct;
 
@@ -22,8 +24,19 @@ import javax.annotation.PostConstruct;
 @Configuration
 public class MallRabbitConfig {
 
-    @Autowired
+    //@Autowired // 注解出现循环依赖问题
     RabbitTemplate rabbitTemplate;
+
+    // TODO 循环依赖
+    @Primary
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory){
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        this.rabbitTemplate = rabbitTemplate;
+        rabbitTemplate.setMessageConverter(messageConverter());
+        initRabbitTemplate();
+        return rabbitTemplate;
+    }
 
     /**
      * 使用JSON序列化机制，进行消息转换
@@ -54,7 +67,7 @@ public class MallRabbitConfig {
      *          channel.basicAck(deliveryTag,false);签收：业务成功完成就应该签收
      *          channel.basicNack(deliveryTag,false);拒签：业务失败，拒签
      */
-    @PostConstruct // MallRabbitConfig对象创建完成以后，执行这个方法
+    //@PostConstruct // MallRabbitConfig对象创建完成以后，执行这个方法
     public void initRabbitTemplate(){
         // 设置确认回调
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {

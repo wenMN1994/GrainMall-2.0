@@ -221,38 +221,41 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     private void saveSessionSkuInfos(List<SeckillSessionsWithSkus> sessions){
-        sessions.stream().forEach(session -> {
-            // 准备hash操作
-            BoundHashOperations<String, Object, Object> ops = stringRedisTemplate.boundHashOps(SKUKILL_CACHE_PREFIX);
-            session.getRelationSkuEntities().stream().forEach(seckillSkuVo -> {
-                // 秒杀随机码
-                String token = UUID.randomUUID().toString().replace("-", "");
+        if(sessions != null){
+            sessions.stream().forEach(session -> {
+                // 准备hash操作
+                BoundHashOperations<String, Object, Object> ops = stringRedisTemplate.boundHashOps(SKUKILL_CACHE_PREFIX);
+                session.getRelationSkuEntities().stream().forEach(seckillSkuVo -> {
+                    // 秒杀随机码
+                    String token = UUID.randomUUID().toString().replace("-", "");
 
-                if(!ops.hasKey(seckillSkuVo.getPromotionSessionId().toString()+"_"+seckillSkuVo.getSkuId().toString())){
-                    // 缓存商品
-                    SeckillSkuRedisTo redisTo = new SeckillSkuRedisTo();
-                    // 1、sku的基本信息
-                    R skuInfo = productFeignService.getSkuInfo(seckillSkuVo.getSkuId());
-                    if(skuInfo.getCode() == 0){
-                        SkuInfoVo info = skuInfo.getData("skuInfo", new TypeReference<SkuInfoVo>() {
-                        });
-                        redisTo.setSkuInfo(info);
+                    if(!ops.hasKey(seckillSkuVo.getPromotionSessionId().toString()+"_"+seckillSkuVo.getSkuId().toString())){
+                        // 缓存商品
+                        SeckillSkuRedisTo redisTo = new SeckillSkuRedisTo();
+                        // 1、sku的基本信息
+                        R skuInfo = productFeignService.getSkuInfo(seckillSkuVo.getSkuId());
+                        if(skuInfo.getCode() == 0){
+                            SkuInfoVo info = skuInfo.getData("skuInfo", new TypeReference<SkuInfoVo>() {
+                            });
+                            redisTo.setSkuInfo(info);
+                        }
+                        // 2、sku的秒杀信息
+                        BeanUtils.copyProperties(seckillSkuVo, redisTo);
+                        // 3、设置上当前商品的秒杀时间信息
+                        redisTo.setStartTime(session.getStartTime().getTime());
+                        redisTo.setEndTime(session.getEndTime().getTime());
+                        redisTo.setRandomCode(token);
+                        String jsonString = JSON.toJSONString(redisTo);
+                        ops.put(seckillSkuVo.getPromotionSessionId().toString()+"_"+seckillSkuVo.getSkuId().toString(), jsonString);
+                        // 使用库存作为分布式信号量
+                        RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + token);
+                        // 商品可以秒杀的数量作为信号量
+                        semaphore.trySetPermits(seckillSkuVo.getSeckillCount());
                     }
-                    // 2、sku的秒杀信息
-                    BeanUtils.copyProperties(seckillSkuVo, redisTo);
-                    // 3、设置上当前商品的秒杀时间信息
-                    redisTo.setStartTime(session.getStartTime().getTime());
-                    redisTo.setEndTime(session.getEndTime().getTime());
-                    redisTo.setRandomCode(token);
-                    String jsonString = JSON.toJSONString(redisTo);
-                    ops.put(seckillSkuVo.getPromotionSessionId().toString()+"_"+seckillSkuVo.getSkuId().toString(), jsonString);
-                    // 使用库存作为分布式信号量
-                    RSemaphore semaphore = redissonClient.getSemaphore(SKU_STOCK_SEMAPHORE + token);
-                    // 商品可以秒杀的数量作为信号量
-                    semaphore.trySetPermits(seckillSkuVo.getSeckillCount());
-                }
+                });
             });
-        });
+        }
+
     }
 
 }
