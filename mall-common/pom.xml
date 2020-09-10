@@ -12,6 +12,11 @@
     <artifactId>mall-common</artifactId>
     <description>每一个微服务公共的依赖,bean,工具类等</description>
 
+    <properties>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.SR5</spring-cloud.version>
+    </properties>
+
     <dependencies>
         <!--mybatis-plus-->
         <dependency>
@@ -128,6 +133,12 @@
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
         </dependency>
 
+        <!--链路追踪-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>
@@ -136,6 +147,13 @@
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>2.1.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

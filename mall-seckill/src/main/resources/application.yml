@@ -11,6 +11,17 @@ spring:
       transport:
         dashboard: 192.168.31.70:8888
         port: 8719
+  # 服务追踪
+  zipkin:
+    # zipkin服务的地址
+    base-url: http://192.168.31.70:9411/
+    # 关闭服务发现，否则Spring Cloud会把zipkin的url当做服务名称
+    discovery-client-enabled: false
+    sender:
+      type: web # 设置使用http的方式传输数据
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
   redis:
     host: 192.168.31.70
     port: 6379
@@ -27,3 +38,9 @@ spring:
 
 server:
   port: 15001
+
+logging:
+  level:
+    com.grain.mall: info
+    org.springframework.cloud.openfeign: debug
+    org.springframework.cloud.sleuth: debug

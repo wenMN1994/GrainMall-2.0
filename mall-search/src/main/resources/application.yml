@@ -1,17 +1,4 @@
-server:
-  port: 14001
-
 spring:
-  application:
-    name: mall-cart
-  # jackson时间格式化
-  jackson:
-    time-zone: GMT+8
-    date-format: yyyy-MM-dd HH:mm:ss
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
   # 服务追踪
   zipkin:
     # zipkin服务的地址

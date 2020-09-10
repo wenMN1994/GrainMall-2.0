@@ -4,3 +4,15 @@
 #    app-key: 你的微博开发者中心提供的App Key
 #    app-secret: 你的微博开发者中心提供的App Secret
 #    redirect-uri: 你的微博开发者中心创建的应用的授权回调页
+spring:
+  # 服务追踪
+  zipkin:
+    # zipkin服务的地址
+    base-url: http://192.168.31.70:9411/
+    # 关闭服务发现，否则Spring Cloud会把zipkin的url当做服务名称
+    discovery-client-enabled: false
+    sender:
+      type: web # 设置使用http的方式传输数据
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
