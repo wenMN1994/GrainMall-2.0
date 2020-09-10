@@ -1,4 +1,27 @@
+server:
+  port: 12001
+
 spring:
+  application:
+    name: mall-search
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.31.70:8888
+  redis:
+    host: 192.168.31.70
+    port: 6379
+  session:
+    store-type: redis
+  thymeleaf:
+    cache: false
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   # 服务追踪
   zipkin:
     # zipkin服务的地址
@@ -10,3 +33,13 @@ spring:
   sleuth:
     sampler:
       probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true

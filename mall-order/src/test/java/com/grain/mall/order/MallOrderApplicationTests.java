@@ -38,13 +38,13 @@ public class MallOrderApplicationTests {
 
     @Test
     public void sendMessageTest() {
-        OrderReturnReasonEntity reasonEntity = new OrderReturnReasonEntity();
-        reasonEntity.setId(1L);
-        reasonEntity.setName("哈哈");
-        reasonEntity.setCreateTime(new Date());
-        String msg = "Hello World";
-        rabbitTemplate.convertAndSend("hello-java-exchange","hello.java",reasonEntity, new CorrelationData(UUID.randomUUID().toString()));
-        log.info("消息发送完成{}", reasonEntity);
+//        OrderReturnReasonEntity reasonEntity = new OrderReturnReasonEntity();
+//        reasonEntity.setId(1L);
+//        reasonEntity.setName("哈哈");
+//        reasonEntity.setCreateTime(new Date());
+//        String msg = "Hello World";
+//        rabbitTemplate.convertAndSend("hello-java-exchange","hello.java",reasonEntity, new CorrelationData(UUID.randomUUID().toString()));
+//        log.info("消息发送完成{}", reasonEntity);
     }
 
     /**
@@ -57,9 +57,9 @@ public class MallOrderApplicationTests {
         /**
          * DirectExchange(String name, boolean durable, boolean autoDelete, Map<String, Object> arguments)
          */
-        DirectExchange directExchange = new DirectExchange("hello-java-exchange", true, false);
-        amqpAdmin.declareExchange(directExchange);
-        log.info("Exchange[{}]创建成功", "hello-java-exchange");
+//        DirectExchange directExchange = new DirectExchange("hello-java-exchange", true, false);
+//        amqpAdmin.declareExchange(directExchange);
+//        log.info("Exchange[{}]创建成功", "hello-java-exchange");
     }
 
     @Test
@@ -67,9 +67,9 @@ public class MallOrderApplicationTests {
         /**
          * Queue(String name, boolean durable, boolean exclusive, boolean autoDelete, Map<String, Object> arguments)
          */
-        Queue queue = new Queue("hello-java-queue",true,false,false);
-        amqpAdmin.declareQueue(queue);
-        log.info("Queue[{}]创建成功", "hello-java-queue");
+//        Queue queue = new Queue("hello-java-queue",true,false,false);
+//        amqpAdmin.declareQueue(queue);
+//        log.info("Queue[{}]创建成功", "hello-java-queue");
     }
 
     @Test
@@ -81,8 +81,8 @@ public class MallOrderApplicationTests {
          * String routingKey, 【路由键】
          * Map<String, Object> arguments)【自定义参数】
          */
-        Binding binding = new Binding("hello-java-queue",Binding.DestinationType.QUEUE,"hello-java-exchange","hello.java",null);
-        amqpAdmin.declareBinding(binding);
-        log.info("Binding[{}]创建成功", "hello-java-binding");
+//        Binding binding = new Binding("hello-java-queue",Binding.DestinationType.QUEUE,"hello-java-exchange","hello.java",null);
+//        amqpAdmin.declareBinding(binding);
+//        log.info("Binding[{}]创建成功", "hello-java-binding");
     }
 }

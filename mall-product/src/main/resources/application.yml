@@ -1,4 +1,9 @@
+# 服务端口
+server:
+  port: 10001
 spring:
+  application:
+    name: mall-product
   # 数据源配置
   datasource:
     username: root
@@ -10,6 +15,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.31.70:8888
   # 服务追踪
   zipkin:
     # zipkin服务的地址
@@ -30,6 +38,15 @@ spring:
   redis:
     host: 192.168.31.70
     port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000 # 毫秒为单位
+      # key-prefix: CACHE_ # 如果指定了前缀就使用我们指定的前缀，如果没有就默认使用缓存的名字作为前缀
+      use-key-prefix: true
+      cache-null-values: true # 是否缓存空值。防止缓存穿透
+  session:
+    store-type: redis
 
 # mybatis配置信息
 mybatis-plus:
@@ -40,9 +57,23 @@ mybatis-plus:
       logic-delete-value: 1 # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 
-# 服务端口
-server:
-  port: 10001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true
+
+# 线程池参数配置
+grain:
+  mall:
+    thread:
+      core-size: 20
+      max-size: 200
+      keep-alive-time: 10
 
 logging:
   level:

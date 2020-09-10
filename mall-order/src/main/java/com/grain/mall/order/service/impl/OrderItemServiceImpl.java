@@ -42,13 +42,13 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
      *  eg. OrderReturnReasonEntity content
      *  3、Channel channel：当前传输数据的通道
      */
-    @RabbitListener(queues = {"hello-java-queue"})
-    public void receiveMessage(Message message, OrderReturnReasonEntity content, Channel channel){
-
-        byte[] body = message.getBody();
-        // 消息头属性信息
-        MessageProperties messageProperties = message.getMessageProperties();
-        System.out.println("接收到消息"+message+"--->内容："+content);
-    }
+//    @RabbitListener(queues = {"hello-java-queue"})
+//    public void receiveMessage(Message message, OrderReturnReasonEntity content, Channel channel){
+//
+//        byte[] body = message.getBody();
+//        // 消息头属性信息
+//        MessageProperties messageProperties = message.getMessageProperties();
+//        System.out.println("接收到消息"+message+"--->内容："+content);
+//    }
 
 }

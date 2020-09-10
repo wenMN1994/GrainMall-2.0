@@ -1,13 +1,40 @@
+server:
+  port: 9001
+
 spring:
+  application:
+    name: mall-order
   datasource:
     username: root
     password: root
     url: jdbc:mysql://192.168.31.70:3306/grain_mall_oms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
+  rabbitmq:
+    host: 192.168.31.70
+    port: 5672
+    virtual-host: /
+    publisher-confirms: true # 开启发送端确认
+    publisher-returns: true # 开启发送端消息抵达队列的确认
+    template:
+      mandatory: true # 只要抵达队列，以异步的方式优先回调我们这个returnConfirm
+    listener:
+      direct:
+        acknowledge-mode: manual # 手动ack消息
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.31.70:8888
+  redis:
+    host: 192.168.31.70
+    port: 6379
+  session:
+    store-type: redis
+  servlet:
+    session:
+      timeout: 30m
   # 服务追踪
   zipkin:
     # zipkin服务的地址
@@ -19,14 +46,13 @@ spring:
   sleuth:
     sampler:
       probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
-  application:
-    name: mall-order
-
   thymeleaf:
     cache: false
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  mvc:
     date-format: yyyy-MM-dd HH:mm:ss
 
 mybatis-plus:
@@ -35,5 +61,20 @@ mybatis-plus:
     db-config:
       id-type: auto
 
-server:
-  port: 9001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true
+
+# 线程池参数配置
+grain:
+  mall:
+    thread:
+      core-size: 20
+      max-size: 200
+      keep-alive-time: 10

@@ -12,6 +12,19 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.31.70:8888
+  redis:
+    host: 192.168.31.70
+    port: 6379
+  session:
+    store-type: redis
+  servlet:
+    session:
+      timeout: 30m
+  thymeleaf:
+    cache: false
   # 服务追踪
   zipkin:
     # zipkin服务的地址
@@ -23,3 +36,21 @@ spring:
   sleuth:
     sampler:
       probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true
+
+# 线程池参数配置
+grain:
+  mall:
+    thread:
+      core-size: 20
+      max-size: 200
+      keep-alive-time: 10

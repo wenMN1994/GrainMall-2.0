@@ -1,3 +1,5 @@
+server:
+  port: 20001
 spring:
   application:
     name: mall-third-party
@@ -5,17 +7,9 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-  # 服务追踪
-  zipkin:
-    # zipkin服务的地址
-    base-url: http://192.168.31.70:9411/
-    # 关闭服务发现，否则Spring Cloud会把zipkin的url当做服务名称
-    discovery-client-enabled: false
-    sender:
-      type: web # 设置使用http的方式传输数据
-  sleuth:
-    sampler:
-      probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
+    sentinel:
+      transport:
+        dashboard: 192.168.31.70:8888
 #    alicloud:
 #      access-key: *********
 #      secret-key: *********
@@ -28,6 +22,24 @@ spring:
 #        method: POST
 #        appcode: 你自己的AppCode
 #        tplId: 你自己的模板Id
+  # 服务追踪
+  zipkin:
+    # zipkin服务的地址
+    base-url: http://192.168.31.70:9411/
+    # 关闭服务发现，否则Spring Cloud会把zipkin的url当做服务名称
+    discovery-client-enabled: false
+    sender:
+      type: web # 设置使用http的方式传输数据
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为100%，默认为0.1，即10%
 
-server:
-  port: 20001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true

@@ -1,3 +1,5 @@
+server:
+  port: 11001
 spring:
   datasource:
     username: root
@@ -8,6 +10,16 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+    sentinel:
+      transport:
+        dashboard: 192.168.31.70:8888
+  rabbitmq:
+    host: 192.168.31.70
+    port: 5672
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual # 手动ack消息
   # 服务追踪
   zipkin:
     # zipkin服务的地址
@@ -32,8 +44,15 @@ mybatis-plus:
     db-config:
       id-type: auto
 
-server:
-  port: 11001
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true
 
 logging:
   level:
