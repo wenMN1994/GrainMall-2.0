@@ -22,3 +22,18 @@ buildNumber.properties
 **/.iml
 
 **/mall-ui.code-workspace
+/mall.iml
+/mall-auth-server/mall-auth-server.iml
+/mall-cart/mall-cart.iml
+/mall-common/mall-common.iml
+/mall-coupon/mall-coupon.iml
+/mall-gateway/mall-gateway.iml
+/mall-member/mall-member.iml
+/mall-order/mall-order.iml
+/mall-product/mall-product.iml
+/mall-search/mall-search.iml
+/mall-seckill/mall-seckill.iml
+/mall-third-party/mall-third-party.iml
+/mall-ware/mall-ware.iml
+/renren-fast/renren-fast.iml
+/renren-generator/renren-generator.iml
