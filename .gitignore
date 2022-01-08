@@ -35,5 +35,5 @@ buildNumber.properties
 /mall-seckill/mall-seckill.iml
 /mall-third-party/mall-third-party.iml
 /mall-ware/mall-ware.iml
-/renren-fast/renren-fast.iml
-/renren-generator/renren-generator.iml
+/mall-admin/mall-admin.iml
+/mall-generator/mall-generator.iml
